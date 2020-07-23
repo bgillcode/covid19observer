@@ -8,6 +8,8 @@ import MappedClassOf from './createmap';
 import Map from './mapthis';
 import SimpleTabs from './mytabs';
 import Tooltip from '@material-ui/core/Tooltip';
+import { Map as Maps, TileLayer, Marker } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 
 
 class App extends Component {
@@ -121,7 +123,22 @@ clickedPlace(event) {
         </Grid>
         <Grid item xs={10} sm={5} md={5}>
         <MappedClassOf areaName={this.state.areaName} onSelectLanguage={this.handleLanguage} dataGottenBackFromAPI={this.state.dataGottenBackFromAPI} />
-        Test test test test test test test test test test test test test test test test test test test test test test test
+
+        Clustering test:
+        <Maps className="markercluster-map" center={[51.0, 19.0]} zoom={4} maxZoom={18}>
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            />
+
+          {/* Put <MarkerClusterGroup {...props} /> inside react-leaflet after <TileLayer /> */}
+          <MarkerClusterGroup>
+            <Marker position={[54.3023545, -3.2765753]} />
+            <Marker position={[54.3013545, -3.2764753]} />
+            <Marker position={[51.7023545, -3.8765753]} />
+          </MarkerClusterGroup>
+        </Maps>
+
         </Grid>
         <Grid item xs={12} sm={5} md={5}>
         <SimpleTabs handleAreaName={this.handleAreaName} areaName={this.state.areaName} dataGottenBackFromAPI={this.state.dataGottenBackFromAPI} />
