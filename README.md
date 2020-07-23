@@ -7,19 +7,21 @@ Frontend: React
 
 ## Install
 
-### Clone this repository and type:
+### Clone the COVID-19 Observer repository and type:
 ```npm install```
 
 ### Set up a virtual environment:
 
 ##### Mac OSX, Linux:
 ```python3 -m venv venv```
+
 ```source api/venv/bin/activate```
 
 OR:
 
 ##### Windows:
 ```python -m venv venv```
+
 ```api\venv\Scripts\activate```
 
 
