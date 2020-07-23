@@ -1,32 +1,34 @@
-# Covid-19 patient app
-Online web app for tracking covid-19 patient data with predictions.
+# COVID-19 Observer App
+Online web app for tracking covid-19 patient data, along with forecasting and predictions.
 Backend: Flask
 Frontend: React
 
-##Clone this repository and type:
-npm install
+## Install
 
-##Set up  a virtual environment:
+##Clone this repository and type:
+```npm install```
+
+## Set up a virtual environment:
 
 Mac OSX, Linux:
 ---------------
-python3 -m venv venv
-source api/venv/bin/activate
+```python3 -m venv venv```
+```source api/venv/bin/activate```
 
 OR:
 
 Windows:
 --------
-python -m venv venv
-api\venv\Scripts\activate
+```python -m venv venv```
+```api\venv\Scripts\activate```
 
 
-##Install requirements.txt:
-pip install -r requirements.txt
+## Install requirements.txt:
+```pip install -r requirements.txt```
 
 
-##To run the client:
-npm start
+## To run the client:
+```npm start```
 
-##To run the backend:
-npm run start-api
+## To run the backend:
+```npm run start-api```
