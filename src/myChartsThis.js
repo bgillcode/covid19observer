@@ -17,8 +17,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 
 export default class LineChart extends Component {
-
-
+  
   constructor(props) {
     super(props);
     this.state = {
