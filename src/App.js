@@ -118,7 +118,6 @@ clickedPlace(event) {
             })}
         </div>
 
-
         </Grid>
         <Grid item xs={10} sm={5} md={5}>
         <MappedClassOf areaName={this.state.areaName} onSelectLanguage={this.handleLanguage} dataGottenBackFromAPI={this.state.dataGottenBackFromAPI} />
