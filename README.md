@@ -1,6 +1,8 @@
 # COVID-19 Observer App
 Online web app for tracking covid-19 patient data, along with forecasting and predictions.
+
 Backend: Flask
+
 Frontend: React
 
 ## Install
