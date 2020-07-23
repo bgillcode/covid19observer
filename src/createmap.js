@@ -12,14 +12,14 @@ class MappedClassOf extends React.Component {
         {
           title: 1,
           latLng: {
-            lat: 49.8419,
-            lng: 24.0315,
+            lat: 54.7023545,
+            lng: -3.2765753,
           }
         },         {
           title: 2,
           latLng: {
-            lat: 49.8420,
-            lng: 24.0316,
+            lat: 54.7023146,
+            lng: -3.2765257,
           }
         }
       ],
