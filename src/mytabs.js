@@ -59,18 +59,22 @@ class SimpleTabs extends React.Component {
       scrollButtons="auto"
       aria-label="scrollable auto tabs example"
       >
-      <Tab label="Item One" />
-      <Tab label="Item Two" />
-      <Tab label="Item Three" />
-      <Tab label="Item Four" />
-      <Tab label="Item Five" />
+      <Tab label="Overview" />
+      <Tab label="Charts" />
+      <Tab label="Cases" />
+      <Tab label="Hospitalised" />
+      <Tab label="Testing" />
+      <Tab label="Deaths" />
+      <Tab label="Forecasting" />
           </Tabs>
         </AppBar>
-        {value === 0 && <TabContainer>{this.props.areaName}</TabContainer>}
+        {value === 0 && <TabContainer>{this.props.areaName} Overview</TabContainer>}
         {value === 1 && <TabContainer><LineChart getDataForChart={this.props.areaName} ifOverview={1} ifCases={1} areaName={this.props.areaName} /></TabContainer>}
-        {value === 2 && <TabContainer>Item Three</TabContainer>}
-        {value === 3 && <TabContainer>Item Four</TabContainer>}
-        {value === 4 && <TabContainer>Item Five</TabContainer>}
+        {value === 2 && <TabContainer>Cases</TabContainer>}
+        {value === 3 && <TabContainer>Hospitalised</TabContainer>}
+        {value === 4 && <TabContainer>Testing</TabContainer>}
+        {value === 5 && <TabContainer>Deaths</TabContainer>}
+        {value === 6 && <TabContainer>Forecasting</TabContainer>}
       </div>
     );
   }
@@ -81,16 +85,3 @@ SimpleTabs.propTypes = {
 };
 
 export default withStyles(styles)(SimpleTabs);
-
-// /**Component Two**/
-//
-// import React from 'react';
-// import SimpleTabs from './SimpleTabs'
-//
-// class ComponentTwo extends React.Component {
-//   render() {
-//     return <SimpleTabs open={2} />;
-//   }
-// }
-//
-// export default ComponentTwo
