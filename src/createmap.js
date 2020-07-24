@@ -30,11 +30,11 @@ class MappedClassOf extends React.Component {
     };
   }
 
-  handleLangChange = () => {
-      var lang = 'test';
-      this.props.onSelectLanguage(lang);
-      console.log('done');
-  }
+  // handleLangChange = () => {
+  //     var lang = 'test';
+  //     this.props.onSelectLanguage(lang);
+  //     console.log('done');
+  // }
 
   addMarker = () => {
     const { markersData } = this.state;
@@ -53,7 +53,7 @@ class MappedClassOf extends React.Component {
       ]
     });
     console.log(markersData);
-    this.handleLangChange();
+    // this.handleLangChange();
   };
 
 
@@ -73,7 +73,7 @@ class MappedClassOf extends React.Component {
       <div>
       <Map className="mappedOfClass" markersData={markersData} locationStart={this.props.areaName} latOfArea={latOfArea} lonOfArea={lonOfArea} />
 
-      <button onClick={this.props.onSelectLanguage}>
+      <button>
       Testingofbutton
       </button>
       </div>
