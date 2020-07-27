@@ -24,3 +24,13 @@ yarn-error.log*
 
 venv
 __pycache__
+
+# For credentials
+api/db.py
+db.py
+
+api/dbs.py
+dbs.py
+
+api/key.py
+key.py
