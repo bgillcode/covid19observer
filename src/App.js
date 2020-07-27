@@ -39,6 +39,8 @@ class App extends Component {
     dataGottenBackFromAPI: [],
     chosenFromDropdownArray: 10,
 
+    dataGottenBackPlaces: [],
+
     latOfArea: "54.7023545",
     lonOfArea: "-3.2765753",
     valueOfZoom: 5,
@@ -54,6 +56,29 @@ class App extends Component {
     // console.log(CountriesNew);
     return CountriesNew;
     // console.log();
+  }
+
+  getColor(d) {
+    return d > 1000 ? '#800026' :
+    d > 500  ? '#BD0026' :
+    d > 200  ? '#E31A1C' :
+    d > 100  ? '#FC4E2A' :
+    d > 50   ? '#FD8D3C' :
+    d > 20   ? '#FEB24C' :
+    d > 10   ? '#FED976' :
+    '#FFEDA0';
+
+  }
+
+  style(feature) {
+    return {
+      fillColor: this.getColor(250),
+      weight: 2,
+      opacity: 0.3,
+      color: 'white',
+      dashArray: '3',
+      fillOpacity: 0.2
+    };
   }
 
   createClusterCustomIcon(cluster) {
@@ -80,14 +105,14 @@ class App extends Component {
     });
   }
 
-  getStyle(feature, layer) {
-    console.log(feature);
-  return {
-    color: '#022450',
-    weight: 2,
-    opacity: 0.1
-  }
-}
+//   getStyle(feature, layer) {
+//     console.log(feature);
+//   return {
+//     color: '#022450',
+//     weight: 2,
+//     opacity: 0.1
+//   }
+// }
 
   updateSearch(event) {
     console.log(event.target.value);
@@ -177,6 +202,31 @@ class App extends Component {
   });
   console.log(this);
 };
+
+
+  // Get the data and then run the update for the chart to be displayed for each one
+  componentDidMount() {
+      var urlGotten = 'http://localhost:5000/apic/getoverview?areatype=' + this.state.areaType + '&areanamegiven=' + this.state.areaName
+
+      console.log(urlGotten);
+
+      fetch(urlGotten).then(res => res.json()).then(data => {
+        var joined = this.state.dataGottenBackPlaces.concat(data)
+        console.log(data);
+        // var dataToAdd = data;
+      })
+
+
+    var urlGotten2 = 'http://localhost:5000/apic/getoverview?areatype=' + 'nation'
+
+    fetch(urlGotten2).then(res => res.json()).then(data => {
+      var joined = this.state.dataGottenBackPlaces.concat(data)
+      console.log(data);
+      // var dataToAdd = data;
+    })
+
+
+  }
 
 
   render() {
@@ -287,15 +337,10 @@ class App extends Component {
 
                 <Marker position={[51.7323545, -3.2765753]} number={5} />
 
-
                   <Marker position={[55.7323545, -1.2765753]} number={8} />
                   <Marker position={[51.7323545, -1.2755753]} number={1000.23} />
 
-
-
               </MarkerClusterGroup>
-
-
 
                 <CircleLeaflet center={[51.7323545, -3.2765753]} radius={5000} attribution="hello" >
                   <Popup
@@ -311,8 +356,8 @@ class App extends Component {
 
                 </CircleLeaflet>
 
-                // <GeoJSON data={this.getGeoJSONNew()} style={this.getStyle(1, 2)} />
-                <GeoJSON data={this.getGeoJSONNew()} style={this.getStyle()} />
+                {/* // <GeoJSON data={this.getGeoJSONNew()} style={this.getStyle(1, 2)} /> */}
+                <GeoJSON data={this.getGeoJSONNew()} style={this.style()} />
               </Maps>
 
 
