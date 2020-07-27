@@ -1,6 +1,8 @@
 import time
 from datetime import datetime
 
+from os import environ
+
 from flask import Flask
 from flask import request
 from flask import jsonify
@@ -20,13 +22,12 @@ from bson import json_util
 # from bson.json_util import loads, dumps
 import re
 
-# Where the key for the CONNECTION_STRING mongodb is stored
-import key
-
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
-app.config["MONGO_URI"] = key.CONNECTION_STRING
-# cors = CORS(app, resources={r"/foo": {"origins": "*"}})
+# Using the URI connection string for MongoDB as an environment variable
+app.config["CONNECTION_STRING"] = environ.get("CONNECTION_STRING")
+thisConnectionString = app.config["CONNECTION_STRING"]
+app.config["MONGO_URI"] = thisConnectionString
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 mongo = PyMongo(app)
