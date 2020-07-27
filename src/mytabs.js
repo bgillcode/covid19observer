@@ -69,7 +69,7 @@ class SimpleTabs extends React.Component {
           </Tabs>
         </AppBar>
         {value === 0 && <TabContainer>{this.props.areaName} Overview</TabContainer>}
-        {value === 1 && <TabContainer><LineChart getDataForChart={this.props.areaName} ifOverview={1} ifCases={1} areaName={this.props.areaName} /></TabContainer>}
+        {value === 1 && <TabContainer><LineChart getDataForChart={this.props.areaName} ifOverview={1} ifCases={1} areaName={this.props.areaName} areaType={this.props.areaType} /></TabContainer>}
         {value === 2 && <TabContainer>Cases</TabContainer>}
         {value === 3 && <TabContainer>Hospitalised</TabContainer>}
         {value === 4 && <TabContainer>Testing</TabContainer>}
