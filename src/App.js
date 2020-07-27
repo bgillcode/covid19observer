@@ -33,6 +33,7 @@ class App extends Component {
   state = {
     language: '',
     areaName: 'United Kingdom',
+    areaType: 'overview',
     search: '',
     dataForSearch: ['United Kingdom', 'England', 'Northern Ireland', 'Scotland', 'Wales'],
     dataGottenBackFromAPI: [],
@@ -95,43 +96,6 @@ class App extends Component {
     this.setState({
       search: event.target.value.substr(0, 20)
     })
-
-
-    // axios.get('http://localhost:5000/apic/getoverview?areatype=nation&areanamegiven=Wales', {
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   transformResponse: axios.defaults.transformResponse.concat((data) => {
-    //     var qc = JSON.parse(data)
-    //     console.log(qc); // this should now be JSON
-    //   })
-    // }).then(res => res.json()).then(data => {
-    //   console.log(data);
-    // });
-
-    axios.get(`http://localhost:5000/apic/getoverview?areatype=nation&areanamegiven=Wales`
-
-    )
-    .then(res => {
-      console.log(res);
-      // console.log(persons);
-    })
-
-    // fetch('http://localhost:5000/apic/getoverview?areatype=nation&areanamegiven=Wales').then(res => res.json()).then(data => {
-    //   // var joined = this.state.dataGottenBack.concat(data)
-    //   // var dataToAdd = data;
-    //
-    //   console.log(data);
-    //
-    //   // this.setState({
-    //   //   dataGottenBack: joined,
-    //   //   getDataForChart: this.props.getDataForChart,
-    //   //
-    //   // }, () => {
-    //   //   this.updateLineChart0();
-    //   // })
-    //
-    // });
 
   }
 
@@ -355,7 +319,7 @@ class App extends Component {
 
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
-              <SimpleTabs handleAreaName={this.handleAreaName} areaName={this.state.areaName} dataGottenBackFromAPI={this.state.dataGottenBackFromAPI} />
+              <SimpleTabs handleAreaName={this.handleAreaName} areaName={this.state.areaName} areaType={this.state.areaType} dataGottenBackFromAPI={this.state.dataGottenBackFromAPI} />
             </Grid>
 
           </Grid>
