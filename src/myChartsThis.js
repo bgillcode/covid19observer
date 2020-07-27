@@ -17,14 +17,14 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 
 export default class LineChart extends Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
       // This is where the data is being stored
       dataGottenBack : [],
       getDataForChart: "",
-      areaType: "",
+      areaType: "overview",
       areaName: "",
 
       chart0Title: "Daily Cases:",
@@ -69,10 +69,17 @@ export default class LineChart extends Component {
     })
 
     if (this.state.ifOverview) {
-      fetch('https://api.coronavirus-staging.data.gov.uk/v1/data?filters=areaName=United%2520Kingdom;areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesByPublishDate%22:%22newCasesByPublishDate%22,%22cumCasesByPublishDate%22:%22cumCasesByPublishDate%22%7D&format=json').then(res => res.json()).then(data => {
-        var joined = this.state.dataGottenBack.concat(data)
-        // var dataToAdd = data;
 
+      var urlGotten = 'http://localhost:5000/apic/getoverview?areatype=' + this.state.areaType + '&areanamegiven=' + this.state.areaName
+
+      console.log(urlGotten);
+
+      fetch(urlGotten).then(res => res.json()).then(data => {
+        var joined = this.state.dataGottenBack.concat(data)
+        return joined
+        console.log(data);
+        // var dataToAdd = data;
+      }).then( joined => {
         this.setState({
           dataGottenBack: joined,
           getDataForChart: this.props.getDataForChart,
@@ -80,13 +87,14 @@ export default class LineChart extends Component {
         }, () => {
           this.updateLineChart0();
         })
+      }
+    )
 
-      });
-    } else {
+  } else {
       this.setState({
         getDataForChart: "no",
       })
-      fetch('https://api.coronavirus-staging.data.gov.uk/v1/data?filters=areaType=nation;areaName=England&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22,%22cumCasesBySpecimenDate%22:%22cumCasesBySpecimenDate%22%7D&format=json').then(res => res.json()).then(data => {
+      fetch('http://localhost:5000/apic/getoverview?areatype=nation&areanamegiven=England').then(res => res.json()).then(data => {
         var joined = this.state.dataGottenBack.concat(data)
         // var dataToAdd = data;
 
@@ -101,19 +109,29 @@ export default class LineChart extends Component {
       });
     }
 
-    fetch('https://api.coronavirus-staging.data.gov.uk/v1/data?filters=areaName=United%2520Kingdom;areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22covidOccupiedMVBeds%22:%22covidOccupiedMVBeds%22%7D&format=json').then(res => res.json()).then(data => {
-      var joined = this.state.dataGottenBack.concat(data)
-      // var dataToAdd = data;
 
+    var urlGotten2 = 'http://localhost:5000/apic/getoverview?areatype=' + this.state.areaType + '&areanamegiven=' + this.state.areaName
+
+    console.log(urlGotten2);
+
+    fetch(urlGotten2).then(res => res.json()).then(data => {
+      var joined = this.state.dataGottenBack.concat(data)
+      return joined
+      console.log(data);
+      // var dataToAdd = data;
+    }).then( joined => {
       this.setState({
         dataGottenBack: joined,
+        // getDataForChart: this.props.getDataForChart,
 
       }, () => {
         this.updateLineChart1();
         this.updateLineChart2();
       })
+    }
+  )
 
-    });
+
   }
 
 
@@ -121,9 +139,17 @@ export default class LineChart extends Component {
   componentDidUpdate(prevProps) {
   // Typical usage (don't forget to compare props):
   if (this.props.areaName !== prevProps.areaName) {
-    console.log(23423942);
+    console.log("areaName set");
     this.setState({
         areaName: this.props.areaName,
+      });
+  }
+
+
+  if (this.props.areaType !== prevProps.areaType) {
+    console.log("areaType set");
+    this.setState({
+        areaType: this.props.areaType,
       });
   }
 
