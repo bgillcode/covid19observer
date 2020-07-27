@@ -106,9 +106,9 @@ def index3():
     # If the area type was in the predefined list
     if areaTypeinlist == 1:
         # If no place name was given
-        if areaNameGiven == '*':
+        if areaNameGiven == '*' or ' ':
             # If the date was not given
-            if dateGiven == '*':
+            if dateGiven == '*' or ' ':
                 # Search by just area
                 # Get the results for just this parameter given (for this areaType)
                 queryCreated = dbss[collectionNameUsed].find({ "areaType" : areaType }, { '_id' : False }).sort("date", -1).limit(limitAmount)
@@ -122,7 +122,7 @@ def index3():
             # If the area type is not 'overview', i.e. if it's not for the United Kingdom, do not want to pass an area name because this is already set
             if areaType != 'overview':
                 # If no date was given, search for just the areaname (for this areaType)
-                if dateGiven == '*':
+                if dateGiven == '*' or ' ':
                     queryCreated = dbss[collectionNameUsed].find({ "areaName" : re.compile(areaNameGiven, re.IGNORECASE) }, { '_id' : False }).limit(limitAmount)
                 # If no date was given, search for just the areaname (for this areaType)
                 else:
