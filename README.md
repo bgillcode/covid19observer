@@ -20,6 +20,7 @@ Frontend: React
 ```cd ..```
 
 Then to activate it (make sure you are in the main project folder):
+
 ```source api/venv/bin/activate```
 
 OR:
@@ -33,6 +34,7 @@ OR:
 ```cd ..```
 
 Then to activate it (make sure you are in the main project folder):
+
 ```api\venv\Scripts\activate```
 
 ### Install requirements.txt:
