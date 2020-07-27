@@ -528,16 +528,17 @@ getStuff() {
                     onClose={popup => console.warn('popup-close', popup)}
                     >
                     <div>
-                      <b>Hello world2!</b>
-                      <p>stuff</p>
+                      <b>Location: Hello world2!</b>
+                      <p>Count: {4}</p>
                     </div>
                   </Popup>
                   </Marker>
-                <Marker position={[59.3035545, -3.2746753]} number={5} />
+
+                <Marker position={[51.7323545, -3.2765753]} number={5} />
 
 
-                  <Marker position={[63.3023545, -3.2765753]} number={8} />
-                  <Marker position={[63.355545, -3.2746753]} number={1000.23} />
+                  <Marker position={[55.7323545, -1.2765753]} number={8} />
+                  <Marker position={[51.7323545, -1.2755753]} number={1000.23} />
 
 
 
