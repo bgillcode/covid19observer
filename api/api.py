@@ -8,18 +8,13 @@ from flask import request
 from flask import jsonify
 from flask import make_response
 from flask import Response
-# from flask.ext.cors import CORS, cross_origin
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
 
 import simplejson
-
 from bson.json_util import loads, dumps
-
-
 import json
 from bson import json_util
-# from bson.json_util import loads, dumps
 import re
 
 
@@ -34,7 +29,6 @@ mongo = PyMongo(app)
 
 
 @app.route('/')
-# @crossdomain(origin="*")
 def index():
     return app.send_static_file('index.html')
 
