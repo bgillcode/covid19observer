@@ -207,3 +207,58 @@ def index3():
     else:
         # Return the result as a json file with the
         return 'No result'
+
+
+
+@app.route('/apic/getpolicy')
+def index4():
+    dategiven = request.args.get('dategiven', default = '*', type = str)
+    policygiven = request.args.get('policygiven', default = '*', type = str)
+
+    print(dategiven)
+    print(policygiven)
+
+    # Check if date given in the parameter route is valid first
+    start = ""
+    if dategiven != '*':
+        try:
+            start = datetime.strptime(dategiven, '%Y-%m-%d')
+        except ValueError:
+            return 'Invalid date'
+
+
+    # Can switch databases from here
+    dbss = mongo.cx['policies']
+
+    # This variable controls how many maximum results are returned from queries
+    limitAmount = 300
+    limitAmountltla = 400
+    limitAmountutla = 300
+
+    areaNameOfOverview = "United Kingdom"
+
+    docs = []
+
+    # Search using the policy given as the collection
+    if policygiven == 'policy1' or policygiven == 'policy2' or policygiven == 'policy3' or policygiven == 'policy4' or policygiven == 'policy5':
+
+        # If date is not given
+        if dategiven == '*':
+            # Search by just policy given in parameter (returns all)
+            # Get the results for just this parameter given (this is because there would be too many to return for this one)
+            queryCreated = dbss[policygiven].find({ }, { '_id' : False }).sort("Date", -1)
+        # If date is given
+        else:
+            # Search by date for the policy given
+            queryCreated = dbss[policygiven].find({ "Date" : start }, { '_id' : False }).sort("Date", -1)
+
+        for doc in queryCreated:
+            docs.append(doc)
+
+    # If results were returned (i.e. not an empty array), return the results as a json
+    if len(docs) > 0:
+        # Return the result as a json file with the
+        return json.dumps(docs, indent=4, sort_keys=True, default=str)
+    else:
+        # Return the result as a json file with the
+        return 'No result'
