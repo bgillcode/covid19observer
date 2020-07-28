@@ -41,6 +41,8 @@ Then to activate it (make sure you are in the main project folder):
 ```pip install -r requirements.txt```
 
 
+## Install
+
 ### To run the client frontend:
 ```npm start```
 
