@@ -44,7 +44,11 @@ Then to activate it (make sure you are in the main project folder):
 ### To run the client:
 ```npm start```
 
-### To run the backend:
+### To run the backend (Mac OSX, Linux):
 ```npm run start-api```
+
+### To run the backend (Windows):
+```\api\venv\Scripts\flask run --no-debugger```
+
 
 Note that for the API backend, the CONNECTION_STRING environment variable must be declared for the connection to the database.
