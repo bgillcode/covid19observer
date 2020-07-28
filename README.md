@@ -5,7 +5,7 @@ Backend: Flask
 
 Frontend: React
 
-## Install
+## How to install
 
 ### Clone the COVID-19 Observer repository and type:
 ```npm install```
@@ -41,7 +41,7 @@ Then to activate it (make sure you are in the main project folder):
 ```pip install -r requirements.txt```
 
 
-## Install
+## How to run the frontend and backend
 
 ### To run the client frontend:
 ```npm start```
