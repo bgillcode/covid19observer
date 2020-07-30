@@ -91,20 +91,12 @@ class App extends Component {
     });
   }
 
-//   addMarker = (e) => {
-//   const {markers} = this.state
-//   markers.push(e.latlng)
-//   this.setState({markers})
-// }
 
   getGeoJSONNew() {
-    // console.log(CountriesNew);
     return CountriesNew;
-    // console.log();
   }
 
   getColor(d) {
-    console.log(d);
     return d > 200000 ? '#800026' :
     d > 18000  ? '#FD8D3C' :
     d > 17000  ? '#FEB24C' :
@@ -254,9 +246,7 @@ class App extends Component {
   zoomToFeature(e) {
     this.myMapRef.current.leafletElement.fitBounds(e.target.getBounds())
     // Maps.fitBounds(e.target.getBounds());
-    // this.refs.leafletElement.map.
   }
-
 
 
   createClusterCustomIcon(cluster) {
@@ -270,11 +260,6 @@ class App extends Component {
     return L.divIcon({ html: n, className: 'mycluster', iconSize: L.point(40, 40) });
   }
 
-  // getGeoJSONNewCountiesLower() {
-  //   // console.log(CountriesNew);
-  //   return CountiesLower;
-  //   // console.log();
-  // }
 
   handleAreaName = (langValue) => {
     console.log('handleAreaName');
@@ -283,14 +268,6 @@ class App extends Component {
     });
   }
 
-  //   getStyle(feature, layer) {
-  //     console.log(feature);
-  //   return {
-  //     color: '#022450',
-  //     weight: 2,
-  //     opacity: 0.1
-  //   }
-  // }
 
   updateSearch(event) {
     console.log(event.target.value);
@@ -329,10 +306,6 @@ class App extends Component {
         }}
 
         />
-
-      // <input placeholder="Search" type="text"
-      //   value={this.state.search}
-      //   onChange={this.updateSearch.bind(this)} />
 
     );
   }
@@ -408,70 +381,6 @@ class App extends Component {
     // } )
   }
 
-
-
-  //   {this.state.dataForMapGottenRegion[0].map((areaType, areaName, areaCode, date, newCasesBySpecimenDate, cumCasesBySpecimenDate, lat, long) =>
-  //     var q = [lat, long]
-  //     <Marker position={lat}, {long} number={ newCasesBySpecimenDate }>
-  //       <Popup>
-  //         <span>A pretty CSS3 popup. <br/> Easily customizable.</span>
-  //       </Popup>
-  //     </Marker>
-  //   )}
-  //
-  // }
-
-        // this.setState({
-        //   dataGottenBackFromAPI: [],
-        // }, () => {
-        //   console.log("cleared");
-        // })
-
-
-        // joined = data[0];
-      // })
-    //
-    //     console.log(joined)
-    //
-    //     // let valueOfZoom = 6;
-    //
-    //     if (joined[0].lat && joined[0].lon) {
-    //       // Change the zoom out if it's for the United Kingdom, otherwise the zoom will be more zoomed in if selecting a region
-    //       // if (gottenPlaceTarget.includes("United Kingdom")) {
-    //       //   valueOfZoom = 5;
-    //       // }
-    //
-    //
-    //       var gottenCollatedRegionInformationvar = this.state.gottenCollatedRegionInformation;
-    //
-    //
-    //       // thisCoordinatesOfThis = [joined[0].lat, joined[0].lon]
-    //       // thisAreaNameOfThis = region.areaName
-    //       // thisRegionOfThis = region.cumCasesBySpecimenDate
-    //
-    //       var newArrayOfThisNow = [[joined[0].lat, joined[0].lon], region.areaName, region.cumCasesBySpecimenDate]
-    //
-    //
-    //       var macv = gottenCollatedRegionInformationvar.concat(newArrayOfThisNow)
-    //
-    //
-    //       gottenCollatedRegionInformationvar = gottenCollatedRegionInformationvar.push(macv)
-    //
-    //       this.setState({
-    //         gottenCollatedRegionInformation: gottenCollatedRegionInformationvar
-    //       }, () => {
-    //         console.log(this.state);
-    //       })
-    //
-    //     }
-    //
-    //
-    // })
-    // // const urlToData = 'https://nominatim.openstreetmap.org/search?q=' + gottenPlaceTarget + ',%20United%20Kingdom';
-    // // // Need to give the format of it too
-    // // const formatForDataOutput = '&format=json';
-
-  // }
 
 
   chosenFromDropdown(event) {
@@ -641,9 +550,6 @@ class App extends Component {
 
 
 
-
-
-
               {/* <MappedClassOf areaName={this.state.areaName} onSelectLanguage={this.handleLanguage} dataGottenBackFromAPI={this.state.dataGottenBackFromAPI} /> */}
 
               Clustering test:
@@ -652,164 +558,6 @@ class App extends Component {
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   />
-
-                {/* Put <MarkerClusterGroup {...props} /> inside react-leaflet after <TileLayer /> */}
-
-                {/*<MarkerClusterGroup>
-
-                  <Marker position={[54.3023545, -3.2765753]} />
-                  <Marker position={[54.3013545, -3.2764753]} />
-
-                  <Marker position={[51.7023545, -3.8765753]}>
-                  <Popup
-                  minWidth={200}
-                  closeButton={false}
-                  onClose={popup => console.warn('popup-close', popup)}
-                  >
-                  <div>
-                  <b>Hello world!</b>
-                  <p>stuff</p>
-                  </div>
-                  </Popup>
-
-                  </Marker>
-
-                  </MarkerClusterGroup>
-                  */}
-
-                  <MarkerClusterGroup iconCreateFunction={this.createClusterCustomIcon}>
-
-                    <Marker position={[55.2970314, -1.72889996]} number={35284}>
-                      <Popup
-                        minWidth={200}
-                        closeButton={false}
-                        onClose={popup => console.warn('popup-close', popup)}
-                        >
-                        <div>
-                          <b>Location: North East</b>
-                          <p>Count: {35284}</p>
-                        </div>
-                      </Popup>
-                    </Marker>
-
-
-
-                    <Marker position={[54.44945145, -2.7723701]} number={45684}>
-                      <Popup
-                        minWidth={200}
-                        closeButton={false}
-                        onClose={popup => console.warn('popup-close', popup)}
-                        >
-                        <div>
-                          <b>Location: North West</b>
-                          <p>Count: {45684}</p>
-                        </div>
-                      </Popup>
-                    </Marker>
-
-
-
-                    <Marker position={[51.4509697, -0.99311]} number={35284}>
-                      <Popup
-                        minWidth={200}
-                        closeButton={false}
-                        onClose={popup => console.warn('popup-close', popup)}
-                        >
-                        <div>
-                          <b>Location: South East</b>
-                          <p>Count: {35284}</p>
-                        </div>
-                      </Popup>
-                    </Marker>
-
-
-                    <Marker position={[52.79571915, -0.84966999]} number={23252}>
-                      <Popup
-                        minWidth={200}
-                        closeButton={false}
-                        onClose={popup => console.warn('popup-close', popup)}
-                        >
-                        <div>
-                          <b>Location: East Midlands</b>
-                          <p>Count: {23252}</p>
-                        </div>
-                      </Popup>
-                    </Marker>
-
-
-                    <Marker position={[59.3023545, -3.2765753]} number={31728}>
-                      <Popup
-                        minWidth={200}
-                        closeButton={false}
-                        onClose={popup => console.warn('popup-close', popup)}
-                        >
-                        <div>
-                          <b>Location: Yorkshire and The Humber</b>
-                          <p>Count: {31728}</p>
-                        </div>
-                      </Popup>
-                    </Marker>
-
-
-                    <Marker position={[52.55696869, -2.2035799]} number={26920}>
-                      <Popup
-                        minWidth={200}
-                        closeButton={false}
-                        onClose={popup => console.warn('popup-close', popup)}
-                        >
-                        <div>
-                          <b>Location: West Midlands</b>
-                          <p>Count: {26920}</p>
-                        </div>
-                      </Popup>
-                    </Marker>
-
-
-                    <Marker position={[55.2970314, -1.72889996]} number={15314}>
-                      <Popup
-                        minWidth={200}
-                        closeButton={false}
-                        onClose={popup => console.warn('popup-close', popup)}
-                        >
-                        <div>
-                          <b>Location: North East</b>
-                          <p>Count: {15314}</p>
-                        </div>
-                      </Popup>
-                    </Marker>
-
-
-                    <Marker position={[52.24066925, 0.50414598]} number={24641}>
-                      <Popup
-                        minWidth={200}
-                        closeButton={false}
-                        onClose={popup => console.warn('popup-close', popup)}
-                        >
-                        <div>
-                          <b>Location: East of England</b>
-                          <p>Count: {4}</p>
-                        </div>
-                      </Popup>
-                    </Marker>
-
-
-                    <Marker position={[50.81119156, -3.63343]} number={13193}>
-                      <Popup
-                        minWidth={200}
-                        closeButton={false}
-                        onClose={popup => console.warn('popup-close', popup)}
-                        >
-                        <div>
-                          <b>Location: South West</b>
-                          <p>Count: {13193}</p>
-                        </div>
-                      </Popup>
-                    </Marker>
-
-
-
-
-                  </MarkerClusterGroup>
 
 
                   {/* // <GeoJSON data={this.getGeoJSONNew()} style={this.getStyle(1, 2)} /> */}
