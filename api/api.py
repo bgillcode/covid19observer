@@ -1,21 +1,27 @@
 import time
 from datetime import datetime
 
-from os import environ
-
 from flask import Flask
 from flask import request
 from flask import jsonify
 from flask import make_response
 from flask import Response
+# from flask.ext.cors import CORS, cross_origin
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
 
 import simplejson
+
 from bson.json_util import loads, dumps
+
+
 import json
 from bson import json_util
+# from bson.json_util import loads, dumps
 import re
+
+# Where the key for the CONNECTION_STRING mongodb is stored
+import key
 
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
@@ -29,6 +35,7 @@ mongo = PyMongo(app)
 
 
 @app.route('/')
+# @crossdomain(origin="*")
 def index():
     return app.send_static_file('index.html')
 
@@ -78,7 +85,7 @@ def index3():
         areaTypeinlist = 1
     if areaType == 'region':
         collectionNameUsed = 'regions_cases'
-        limitAmount = 9
+        limitAmount = 1000
         areaTypeinlist = 1
     if areaType == 'nation':
         collectionNameUsed = 'nations_overview'
@@ -101,28 +108,30 @@ def index3():
     # If the area type was in the predefined list
     if areaTypeinlist == 1:
         # If no place name was given
-        if areaNameGiven == '*' or ' ':
+        if areaNameGiven == '*' or areaNameGiven == ' ':
             # If the date was not given
-            if dateGiven == '*' or ' ':
+            if dateGiven == '*' or dateGiven == ' ':
                 # Search by just area
                 # Get the results for just this parameter given (for this areaType)
+                print("first")
                 queryCreated = dbss[collectionNameUsed].find({ "areaType" : areaType }, { '_id' : False }).sort("date", -1).limit(limitAmount)
             else:
                 # Search by just date
                 # Get the results for the parameter given (for this areaType)
-                queryCreated = dbss[collectionNameUsed].find({ "date" : start }, { '_id' : False }).sort("date", -1).limit(limitAmount)
+                print("second")
+                queryCreated = dbss[collectionNameUsed].find({ "date" : start }, { '_id' : False }).limit(limitAmount)
 
         # If a place name was given
         else:
             # If the area type is not 'overview', i.e. if it's not for the United Kingdom, do not want to pass an area name because this is already set
             if areaType != 'overview':
                 # If no date was given, search for just the areaname (for this areaType)
-                if dateGiven == '*' or ' ':
-                    queryCreated = dbss[collectionNameUsed].find({ "areaName" : re.compile(areaNameGiven, re.IGNORECASE) }, { '_id' : False }).sort("date", -1).limit(limitAmount)
+                if dateGiven == '*' or dateGiven == ' ':
+                    queryCreated = dbss[collectionNameUsed].find({ "areaName" : re.compile(areaNameGiven, re.IGNORECASE) }, { '_id' : False }).limit(limitAmount)
                 # If no date was given, search for just the areaname (for this areaType)
                 else:
                     # If no date was given, search for the date and areaname (for this areaType)
-                    queryCreated = dbss[collectionNameUsed].find({ "date" : start, "areaName" : re.compile(areaNameGiven, re.IGNORECASE) }, { '_id' : False }).sort("date", -1).limit(limitAmount)
+                    queryCreated = dbss[collectionNameUsed].find({ "date" : start, "areaName" : re.compile(areaNameGiven, re.IGNORECASE) }, { '_id' : False }).limit(limitAmount)
 
     # Get the pymongo query response
     json_str = dumps(queryCreated, default=json_util.default)
