@@ -6,6 +6,9 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import LineChart from "./myChartsThis.js";
+import './App.css';
+import { Grid } from "@material-ui/core";
+import { Component } from "react";
 
 
 function TabContainer(props) {
@@ -43,6 +46,40 @@ class SimpleTabs extends React.Component {
     this.setState({ Tabvalue: value });
   };
 
+  populateDetails() {
+    return (
+    <div>
+      <Grid container direction="column">
+        <Grid item container>
+          <Grid item xs={12} sm={12} md={6}>
+            <div style={{ fontSize: 13, lineHeight: 0 }}>
+            <p> Region selected: {this.props.areaName} </p>
+            <p> Population: {this.props.areaName} </p>
+            <p> Population density: {this.props.areaName} </p>
+            <p> Number of people in region with: {this.props.areaName} </p>
+            <p> - Diabetes: {this.props.areaName} </p>
+            <p> - Kidney-related: {this.props.areaName} </p>
+            <p> Number of people aged over 65: {this.props.areaName} </p>
+            <p> People in poverty: {this.props.areaName} </p>
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={12} md={6}>
+            <div style={{ fontSize: 13, lineHeight: 0 }}>
+            <p> School information: {this.props.areaName} </p>
+            <p> - Schools open: {this.props.areaName} </p>
+            <p> - Schools closed: {this.props.areaName} </p>
+            <p> Weather: Temperature: {this.props.areaName} </p>
+            <p> Travel: {this.props.areaName} </p>
+            <p> Lockdown on this date: {this.props.areaName} </p>
+            </div>
+          </Grid>
+        </Grid>
+      </Grid>
+        </div>
+
+    )
+  }
+
   render() {
     const { classes } = this.props;
     const { Tabvalue } = this.state;
@@ -68,7 +105,7 @@ class SimpleTabs extends React.Component {
       <Tab style={{ minWidth: 30 }} label="Forecasting" />
           </Tabs>
         </AppBar>
-        {value === 0 && <TabContainer>{this.props.areaName} Overview</TabContainer>}
+        {value === 0 && <TabContainer style={{ fontSize: 12 }}>{this.populateDetails()}</TabContainer>}
         {value === 1 && <TabContainer><LineChart getDataForChart={this.props.areaName} ifOverview={1} ifCases={1} areaName={this.props.areaName} areaType={this.props.areaType} /></TabContainer>}
         {value === 2 && <TabContainer>Cases</TabContainer>}
         {value === 3 && <TabContainer>Hospitalised</TabContainer>}

@@ -78,7 +78,7 @@ def index3():
         areaTypeinlist = 1
     if areaType == 'region':
         collectionNameUsed = 'regions_cases'
-        limitAmount = 1000
+        limitAmount = 9
         areaTypeinlist = 1
     if areaType == 'nation':
         collectionNameUsed = 'nations_overview'
