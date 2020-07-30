@@ -34,18 +34,6 @@ import L from "leaflet";
 // Import the countries boundaries for the UK
 import CountriesNew from "./countries"
 
-// // Import counties boundaries for the UK
-// import CountiesLower from "./countieslower"
-
-// const useStylesTextField = makeStyles((theme) => ({
-//   root: {
-//     '& > *': {
-//       margin: theme.spacing(1),
-//       width: '25ch',
-//     },
-//   },
-// }));
-
 class App extends Component {
 
   constructor(props) {
@@ -246,6 +234,7 @@ class App extends Component {
   zoomToFeature(e) {
     this.myMapRef.current.leafletElement.fitBounds(e.target.getBounds())
     // Maps.fitBounds(e.target.getBounds());
+    // this.refs.leafletElement.map.
   }
 
 
@@ -365,20 +354,6 @@ class App extends Component {
 
   loadPointsOnMap() {
     return;
-    // Set state at the beginning
-    // this.setState({
-    //   gottenCollatedRegionInformation: [51.505, 1.45, 5, 'test']
-    // }, () => {
-    //   console.log(this.state);
-    // })
-    //
-    // this.state.dataForMapGottenRegion.forEach({
-    //
-    // })
-    //
-    // this.state.dataForMapGottenRegion.map((areaName) => {
-    //   // console.log(a);
-    // } )
   }
 
 
@@ -410,9 +385,6 @@ class App extends Component {
     });
 
 
-
-
-    // layer.bindPopup("Cumulative Daily Cases: " + gottenFeature + ": " + gottenFeatureNumber);
   }
 
 
@@ -476,7 +448,6 @@ class App extends Component {
 
 
   render() {
-
     let filteredSearchPlaces = this.state.dataForSearch.concat(this.state.dataForSearchRegion).filter(
       (place) => {
         return place.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
