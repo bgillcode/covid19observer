@@ -110,7 +110,7 @@ def index3():
             else:
                 # Search by just date
                 # Get the results for the parameter given (for this areaType)
-                queryCreated = dbss[collectionNameUsed].find({ "date" : start }, { '_id' : False }).limit(limitAmount)
+                queryCreated = dbss[collectionNameUsed].find({ "date" : start }, { '_id' : False }).sort("date", -1).limit(limitAmount)
 
         # If a place name was given
         else:
@@ -118,11 +118,11 @@ def index3():
             if areaType != 'overview':
                 # If no date was given, search for just the areaname (for this areaType)
                 if dateGiven == '*' or ' ':
-                    queryCreated = dbss[collectionNameUsed].find({ "areaName" : re.compile(areaNameGiven, re.IGNORECASE) }, { '_id' : False }).limit(limitAmount)
+                    queryCreated = dbss[collectionNameUsed].find({ "areaName" : re.compile(areaNameGiven, re.IGNORECASE) }, { '_id' : False }).sort("date", -1).limit(limitAmount)
                 # If no date was given, search for just the areaname (for this areaType)
                 else:
                     # If no date was given, search for the date and areaname (for this areaType)
-                    queryCreated = dbss[collectionNameUsed].find({ "date" : start, "areaName" : re.compile(areaNameGiven, re.IGNORECASE) }, { '_id' : False }).limit(limitAmount)
+                    queryCreated = dbss[collectionNameUsed].find({ "date" : start, "areaName" : re.compile(areaNameGiven, re.IGNORECASE) }, { '_id' : False }).sort("date", -1).limit(limitAmount)
 
     # Get the pymongo query response
     json_str = dumps(queryCreated, default=json_util.default)
