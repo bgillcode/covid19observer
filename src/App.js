@@ -18,7 +18,13 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
 
+import IconButton from "@material-ui/core/IconButton";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import SearchIcon from "@material-ui/icons/Search";
+
 import Choropleth from 'react-leaflet-choropleth'
+
+import TextField from '@material-ui/core/TextField';
 
 import axios from 'axios';
 
@@ -29,6 +35,15 @@ import CountriesNew from "./countries"
 
 // // Import counties boundaries for the UK
 // import CountiesLower from "./countieslower"
+
+// const useStylesTextField = makeStyles((theme) => ({
+//   root: {
+//     '& > *': {
+//       margin: theme.spacing(1),
+//       width: '25ch',
+//     },
+//   },
+// }));
 
 class App extends Component {
 
@@ -61,6 +76,9 @@ class App extends Component {
     this.style = this.style.bind(this);
 
     this.gotNewNumber = this.gotNewNumber.bind(this);
+
+    this.myMapRef = React.createRef();
+
   }
 
   handleLanguage = (langValue) => {
@@ -224,7 +242,9 @@ class App extends Component {
   }
 
   zoomToFeature(e) {
-    Maps.fitBounds(e.target.getBounds());
+    this.myMapRef.current.leafletElement.fitBounds(e.target.getBounds())
+    // Maps.fitBounds(e.target.getBounds());
+    // this.refs.leafletElement.map.
   }
 
 
@@ -281,9 +301,23 @@ class App extends Component {
 
   displayTextBox() {
     return (
-      <input placeholder="Search" type="text"
-        value={this.state.search}
-        onChange={this.updateSearch.bind(this)} />
+      <TextField id="filled-search" value={this.state.search} onChange={this.updateSearch.bind(this)}  label="Search locations" type="search"
+
+        InputProps={{
+          endAdornment: (
+            <InputAdornment>
+              <IconButton>
+                <SearchIcon />
+              </IconButton>
+            </InputAdornment>
+          )
+        }}
+
+        />
+
+      // <input placeholder="Search" type="text"
+      //   value={this.state.search}
+      //   onChange={this.updateSearch.bind(this)} />
 
     );
   }
@@ -364,7 +398,7 @@ class App extends Component {
     layer.on({
       mouseover: this.highlightFeature.bind(this),
       mouseout: this.resetHighlight.bind(this),
-      click: this.zoomToFeature
+      click: this.zoomToFeature.bind(this)
     });
 
 
@@ -433,7 +467,7 @@ class App extends Component {
         <Grid item container>
           <Grid item xs={2} sm={2} md={2}>
             <div>
-              Search for the region you want
+
               {this.displayTextBox()}
 
               {filteredSearchPlaces.map((place, i)=> {
@@ -473,7 +507,7 @@ class App extends Component {
               {/* <MappedClassOf areaName={this.state.areaName} onSelectLanguage={this.handleLanguage} dataGottenBackFromAPI={this.state.dataGottenBackFromAPI} /> */}
 
               Clustering test:
-              <Maps className="markercluster-map" center={[this.state.latOfArea, this.state.lonOfArea]} zoom={this.state.valueOfZoom} maxZoom={18}>
+              <Maps className="markercluster-map" center={[this.state.latOfArea, this.state.lonOfArea]} zoom={this.state.valueOfZoom} maxZoom={18} ref={this.myMapRef}>
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
