@@ -52,20 +52,20 @@ class SimpleTabs extends React.Component {
 
     return (
       <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" style={{ background: '#2E3B55', height: 40  }}>
       <Tabs value={value}
       onChange={this.handleChange}
       variant="scrollable"
       scrollButtons="auto"
       aria-label="scrollable auto tabs example"
       >
-      <Tab label="Overview" />
-      <Tab label="Charts" />
-      <Tab label="Cases" />
-      <Tab label="Hospitalised" />
-      <Tab label="Testing" />
-      <Tab label="Deaths" />
-      <Tab label="Forecasting" />
+      <Tab style={{ minWidth: 30 }} label="Overview" />
+      <Tab style={{ minWidth: 30 }} label="Charts" />
+      <Tab style={{ minWidth: 30 }} label="Cases" />
+      <Tab style={{ minWidth: 30 }} label="Hospitalised" />
+      <Tab style={{ minWidth: 30 }} label="Testing" />
+      <Tab style={{ minWidth: 30 }} label="Deaths" />
+      <Tab style={{ minWidth: 30 }} label="Forecasting" />
           </Tabs>
         </AppBar>
         {value === 0 && <TabContainer>{this.props.areaName} Overview</TabContainer>}

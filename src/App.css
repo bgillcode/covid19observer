@@ -38,6 +38,12 @@
 }
 
 
+#filled-search: {
+    margin: theme.spacing(1);
+    width: '25ch';
+}
+
+
 /* .mycluster {
   width: 40px;
   background-color: greenyellow;
