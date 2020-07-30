@@ -4,6 +4,7 @@ import './App.css';
 import LineChart from "./myChartsThis.js";
 import { Grid } from "@material-ui/core";
 import Header from "./header.js";
+import Footer from "./footer.js";
 import MappedClassOf from './createmap';
 import Map from './mapthis';
 import SimpleTabs from './mytabs';
@@ -57,6 +58,7 @@ class App extends Component {
       areaType: 'overview',
       search: '',
       dataForSearch: ['United Kingdom', 'England', 'Northern Ireland', 'Scotland', 'Wales'],
+      dataForSearchRegion: ['East of England', 'East Midlands', 'London', 'North East', 'North West', 'South East', 'South West', 'West Midlands', 'Yorkshire and The Humber'],
       dataGottenBackFromAPI: [],
       chosenFromDropdownArray: 10,
 
@@ -67,7 +69,9 @@ class App extends Component {
       valueOfZoom: 5,
       dataForMapGotten: [],
       dataForMapGottenNation: [],
+      dataForMapGottenRegion: ["region", "London", "E12000007", "2020-07-29T00:00:00.000+00:00", "0", "35231", "51.49227142", "-0.30864"],
       loadedBorderInfo: 0,
+      gottenCollatedRegionInformation: [[[51.505, 1.45], 5, 'test']]
     }
 
     this.geojson = L.geoJson();
@@ -86,6 +90,12 @@ class App extends Component {
       language: 'blah',
     });
   }
+
+//   addMarker = (e) => {
+//   const {markers} = this.state
+//   markers.push(e.latlng)
+//   this.setState({markers})
+// }
 
   getGeoJSONNew() {
     // console.log(CountriesNew);
@@ -299,6 +309,11 @@ class App extends Component {
     console.log(this.state.dataForMapGottenNation);
   }
 
+  showOnMap() {
+    this.loadPointsOnMap();
+    console.log(this.state.dataForMapGottenRegion);
+  }
+
   displayTextBox() {
     return (
       <TextField id="filled-search" value={this.state.search} onChange={this.updateSearch.bind(this)}  label="Search locations" type="search"
@@ -375,6 +390,90 @@ class App extends Component {
   }
 
 
+  loadPointsOnMap() {
+    return;
+    // Set state at the beginning
+    // this.setState({
+    //   gottenCollatedRegionInformation: [51.505, 1.45, 5, 'test']
+    // }, () => {
+    //   console.log(this.state);
+    // })
+    //
+    // this.state.dataForMapGottenRegion.forEach({
+    //
+    // })
+    //
+    // this.state.dataForMapGottenRegion.map((areaName) => {
+    //   // console.log(a);
+    // } )
+  }
+
+
+
+  //   {this.state.dataForMapGottenRegion[0].map((areaType, areaName, areaCode, date, newCasesBySpecimenDate, cumCasesBySpecimenDate, lat, long) =>
+  //     var q = [lat, long]
+  //     <Marker position={lat}, {long} number={ newCasesBySpecimenDate }>
+  //       <Popup>
+  //         <span>A pretty CSS3 popup. <br/> Easily customizable.</span>
+  //       </Popup>
+  //     </Marker>
+  //   )}
+  //
+  // }
+
+        // this.setState({
+        //   dataGottenBackFromAPI: [],
+        // }, () => {
+        //   console.log("cleared");
+        // })
+
+
+        // joined = data[0];
+      // })
+    //
+    //     console.log(joined)
+    //
+    //     // let valueOfZoom = 6;
+    //
+    //     if (joined[0].lat && joined[0].lon) {
+    //       // Change the zoom out if it's for the United Kingdom, otherwise the zoom will be more zoomed in if selecting a region
+    //       // if (gottenPlaceTarget.includes("United Kingdom")) {
+    //       //   valueOfZoom = 5;
+    //       // }
+    //
+    //
+    //       var gottenCollatedRegionInformationvar = this.state.gottenCollatedRegionInformation;
+    //
+    //
+    //       // thisCoordinatesOfThis = [joined[0].lat, joined[0].lon]
+    //       // thisAreaNameOfThis = region.areaName
+    //       // thisRegionOfThis = region.cumCasesBySpecimenDate
+    //
+    //       var newArrayOfThisNow = [[joined[0].lat, joined[0].lon], region.areaName, region.cumCasesBySpecimenDate]
+    //
+    //
+    //       var macv = gottenCollatedRegionInformationvar.concat(newArrayOfThisNow)
+    //
+    //
+    //       gottenCollatedRegionInformationvar = gottenCollatedRegionInformationvar.push(macv)
+    //
+    //       this.setState({
+    //         gottenCollatedRegionInformation: gottenCollatedRegionInformationvar
+    //       }, () => {
+    //         console.log(this.state);
+    //       })
+    //
+    //     }
+    //
+    //
+    // })
+    // // const urlToData = 'https://nominatim.openstreetmap.org/search?q=' + gottenPlaceTarget + ',%20United%20Kingdom';
+    // // // Need to give the format of it too
+    // // const formatForDataOutput = '&format=json';
+
+  // }
+
+
   chosenFromDropdown(event) {
     console.log(event);
     this.setState({
@@ -443,12 +542,33 @@ class App extends Component {
     }).then( () => {
       this.updateMapBorders();
     })
+
+
+    var urlGotten3 = 'http://localhost:5000/apic/getoverview?areatype=' + 'region'
+
+    fetch(urlGotten3).then(res => res.json()).then(data => {
+      data.data.forEach((a) => {
+        console.log(a);
+      })
+      console.log(data);
+      var joined = this.state.dataForMapGottenRegion.concat(data)
+      console.log(data.data);
+      return joined;
+    }).then( joined => {
+      this.setState({
+        dataForMapGottenRegion: joined,
+      })
+    }).then( () => {
+      this.showOnMap();
+    })
+
+
   }
 
 
   render() {
 
-    let filteredSearchPlaces = this.state.dataForSearch.filter(
+    let filteredSearchPlaces = this.state.dataForSearch.concat(this.state.dataForSearchRegion).filter(
       (place) => {
         return place.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
       }
@@ -467,7 +587,11 @@ class App extends Component {
         <Grid item container>
           <Grid item xs={2} sm={2} md={2}>
             <div>
-
+              <div id="last-updated-on">
+                <p>
+                  Last updated on: "{Date}"
+                </p>
+                </div>
               {this.displayTextBox()}
 
               {filteredSearchPlaces.map((place, i)=> {
@@ -475,12 +599,28 @@ class App extends Component {
                 })}
               </div>
 
+              <div id='site-information'>
+                <ul>
+                <li>Site Information</li>
+                <li>Accessibility</li>
+                <li>Data sources</li>
+                <li>Map information</li>
+                <li>News and information</li>
+                <li>COVID-19 Basics</li>
+                <li>View Desktop / Mobile version</li>
+                </ul>
+                </div>
+
             </Grid>
             {/* Map */}
             <Grid item xs={10} sm={4} md={4}>
 
 
               <div>
+                <div id='currently-selected-label-above-map'>
+                  <p>Currently displaying: {this.state.areaName}
+                    </p>
+                </div>
                 <FormControl>
                   <InputLabel htmlFor="age-native-simple">Currently Displaying:</InputLabel>
                   <Select
@@ -539,39 +679,138 @@ class App extends Component {
 
                   <MarkerClusterGroup iconCreateFunction={this.createClusterCustomIcon}>
 
-                    <Marker position={[59.3023545, -3.2765753]} number={5}>
+                    <Marker position={[55.2970314, -1.72889996]} number={35284}>
                       <Popup
                         minWidth={200}
                         closeButton={false}
                         onClose={popup => console.warn('popup-close', popup)}
                         >
                         <div>
-                          <b>Location: Hello world2!</b>
+                          <b>Location: North East</b>
+                          <p>Count: {35284}</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+
+
+
+                    <Marker position={[54.44945145, -2.7723701]} number={45684}>
+                      <Popup
+                        minWidth={200}
+                        closeButton={false}
+                        onClose={popup => console.warn('popup-close', popup)}
+                        >
+                        <div>
+                          <b>Location: North West</b>
+                          <p>Count: {45684}</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+
+
+
+                    <Marker position={[51.4509697, -0.99311]} number={35284}>
+                      <Popup
+                        minWidth={200}
+                        closeButton={false}
+                        onClose={popup => console.warn('popup-close', popup)}
+                        >
+                        <div>
+                          <b>Location: South East</b>
+                          <p>Count: {35284}</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+
+
+                    <Marker position={[52.79571915, -0.84966999]} number={23252}>
+                      <Popup
+                        minWidth={200}
+                        closeButton={false}
+                        onClose={popup => console.warn('popup-close', popup)}
+                        >
+                        <div>
+                          <b>Location: East Midlands</b>
+                          <p>Count: {23252}</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+
+
+                    <Marker position={[59.3023545, -3.2765753]} number={31728}>
+                      <Popup
+                        minWidth={200}
+                        closeButton={false}
+                        onClose={popup => console.warn('popup-close', popup)}
+                        >
+                        <div>
+                          <b>Location: Yorkshire and The Humber</b>
+                          <p>Count: {31728}</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+
+
+                    <Marker position={[52.55696869, -2.2035799]} number={26920}>
+                      <Popup
+                        minWidth={200}
+                        closeButton={false}
+                        onClose={popup => console.warn('popup-close', popup)}
+                        >
+                        <div>
+                          <b>Location: West Midlands</b>
+                          <p>Count: {26920}</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+
+
+                    <Marker position={[55.2970314, -1.72889996]} number={15314}>
+                      <Popup
+                        minWidth={200}
+                        closeButton={false}
+                        onClose={popup => console.warn('popup-close', popup)}
+                        >
+                        <div>
+                          <b>Location: North East</b>
+                          <p>Count: {15314}</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+
+
+                    <Marker position={[52.24066925, 0.50414598]} number={24641}>
+                      <Popup
+                        minWidth={200}
+                        closeButton={false}
+                        onClose={popup => console.warn('popup-close', popup)}
+                        >
+                        <div>
+                          <b>Location: East of England</b>
                           <p>Count: {4}</p>
                         </div>
                       </Popup>
                     </Marker>
 
-                    <Marker position={[51.7323545, -3.2765753]} number={5} />
 
-                    <Marker position={[55.7323545, -1.2765753]} number={8} />
-                    <Marker position={[51.7323545, -1.2755753]} number={1000.23} />
+                    <Marker position={[50.81119156, -3.63343]} number={13193}>
+                      <Popup
+                        minWidth={200}
+                        closeButton={false}
+                        onClose={popup => console.warn('popup-close', popup)}
+                        >
+                        <div>
+                          <b>Location: South West</b>
+                          <p>Count: {13193}</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+
+
+
 
                   </MarkerClusterGroup>
 
-                  <CircleLeaflet center={[51.7323545, -3.2765753]} radius={5000} attribution="hello" >
-                    <Popup
-                      minWidth={200}
-                      closeButton={false}
-                      onClose={popup => console.warn('popup-close', popup)}
-                      >
-                      <div>
-                        <b>Hello world2!</b>
-                        <p>stuff</p>
-                      </div>
-                    </Popup>
-
-                  </CircleLeaflet>
 
                   {/* // <GeoJSON data={this.getGeoJSONNew()} style={this.getStyle(1, 2)} /> */}
                   <GeoJSON data={this.getGeoJSONNew()} style={this.style} onEachFeature={this.onEachFeature.bind(this)} ref="geojson">
@@ -590,7 +829,9 @@ class App extends Component {
               </Grid>
 
             </Grid>
+            <Footer></Footer>
           </Grid>
+
         );
       }
     }
