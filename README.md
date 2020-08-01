@@ -1,5 +1,5 @@
 # COVID-19 Observer App
-Online web app for tracking COVID-19 patient data, along with forecasting and predictions.
+Online web app for tracking COVID-19 data, along with forecasting and predictions.
 
 Backend: Flask
 
