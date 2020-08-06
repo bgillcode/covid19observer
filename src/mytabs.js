@@ -39,11 +39,15 @@ class SimpleTabs extends React.Component {
   componentDidMount() {
     if (this.props.open) {
       this.setState({ Tabvalue: this.props.open });
+      console.log(this.props);
+
     }
   }
 
   handleChange = (event, value) => {
     this.setState({ Tabvalue: value });
+    console.log(this.props);
+    console.log(this.props.areaDetailsForOverview[0].data.Male);
   };
 
   populateDetails() {
@@ -54,7 +58,7 @@ class SimpleTabs extends React.Component {
           <Grid item xs={12} sm={12} md={6}>
             <div style={{ fontSize: 13, lineHeight: 0 }}>
             <p> Region selected: {this.props.areaName} </p>
-            <p> Population: {this.props.areaName} </p>
+            <p> Population: {this.props.areaDetailsForOverview[0].data['All ages']} </p>
             <p> Population density: {this.props.areaName} </p>
             <p> Number of people in region with: {this.props.areaName} </p>
             <p> - Diabetes: {this.props.areaName} </p>
@@ -105,7 +109,7 @@ class SimpleTabs extends React.Component {
       <Tab style={{ minWidth: 30 }} label="Forecasting" />
           </Tabs>
         </AppBar>
-        {value === 0 && <TabContainer style={{ fontSize: 12 }}>{this.populateDetails()}</TabContainer>}
+        {value === 0 && <TabContainer style={{ fontSize: 12 }}>{this.populateDetails()}<LineChart getDataForChart={this.props.areaName} ifOverview={1} ifCases={1} areaName={this.props.areaName} areaType={this.props.areaType} /></TabContainer>}
         {value === 1 && <TabContainer><LineChart getDataForChart={this.props.areaName} ifOverview={1} ifCases={1} areaName={this.props.areaName} areaType={this.props.areaType} /></TabContainer>}
         {value === 2 && <TabContainer>Cases</TabContainer>}
         {value === 3 && <TabContainer>Hospitalised</TabContainer>}
