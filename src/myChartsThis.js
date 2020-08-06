@@ -24,12 +24,12 @@ export default class LineChart extends Component {
       // This is where the data is being stored
       dataGottenBack : [],
       getDataForChart: "",
-      areaType: "overview",
+      areaType: "",
       areaName: "",
 
       chart0Title: "Daily Cases:",
       chart1Title: "Patients in ventilation beds:",
-      chart2Title: "Chart with results together for first two:",
+      chart2Title: "Comparison of: Daily Cases and Patients in ventilation beds:",
 
       ifOverview: true,
 
@@ -69,17 +69,10 @@ export default class LineChart extends Component {
     })
 
     if (this.state.ifOverview) {
-
-      var urlGotten = 'http://localhost:5000/apic/getoverview?areatype=' + this.state.areaType + '&areanamegiven=' + this.state.areaName
-
-      console.log(urlGotten);
-
-      fetch(urlGotten).then(res => res.json()).then(data => {
+      fetch('https://api.coronavirus-staging.data.gov.uk/v1/data?filters=areaName=United%2520Kingdom;areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesByPublishDate%22:%22newCasesByPublishDate%22,%22cumCasesByPublishDate%22:%22cumCasesByPublishDate%22%7D&format=json').then(res => res.json()).then(data => {
         var joined = this.state.dataGottenBack.concat(data)
-        return joined
-        console.log(data);
         // var dataToAdd = data;
-      }).then( joined => {
+
         this.setState({
           dataGottenBack: joined,
           getDataForChart: this.props.getDataForChart,
@@ -87,14 +80,13 @@ export default class LineChart extends Component {
         }, () => {
           this.updateLineChart0();
         })
-      }
-    )
 
-  } else {
+      });
+    } else {
       this.setState({
         getDataForChart: "no",
       })
-      fetch('http://localhost:5000/apic/getoverview?areatype=nation&areanamegiven=England').then(res => res.json()).then(data => {
+      fetch('https://api.coronavirus-staging.data.gov.uk/v1/data?filters=areaType=nation;areaName=England&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22,%22cumCasesBySpecimenDate%22:%22cumCasesBySpecimenDate%22%7D&format=json').then(res => res.json()).then(data => {
         var joined = this.state.dataGottenBack.concat(data)
         // var dataToAdd = data;
 
@@ -109,29 +101,19 @@ export default class LineChart extends Component {
       });
     }
 
-
-    var urlGotten2 = 'http://localhost:5000/apic/getoverview?areatype=' + this.state.areaType + '&areanamegiven=' + this.state.areaName
-
-    console.log(urlGotten2);
-
-    fetch(urlGotten2).then(res => res.json()).then(data => {
+    fetch('https://api.coronavirus-staging.data.gov.uk/v1/data?filters=areaName=United%2520Kingdom;areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22covidOccupiedMVBeds%22:%22covidOccupiedMVBeds%22%7D&format=json').then(res => res.json()).then(data => {
       var joined = this.state.dataGottenBack.concat(data)
-      return joined
-      console.log(data);
       // var dataToAdd = data;
-    }).then( joined => {
+
       this.setState({
         dataGottenBack: joined,
-        // getDataForChart: this.props.getDataForChart,
 
       }, () => {
         this.updateLineChart1();
         this.updateLineChart2();
       })
-    }
-  )
 
-
+    });
   }
 
 
@@ -139,17 +121,9 @@ export default class LineChart extends Component {
   componentDidUpdate(prevProps) {
   // Typical usage (don't forget to compare props):
   if (this.props.areaName !== prevProps.areaName) {
-    console.log("areaName set");
+    console.log(23423942);
     this.setState({
         areaName: this.props.areaName,
-      });
-  }
-
-
-  if (this.props.areaType !== prevProps.areaType) {
-    console.log("areaType set");
-    this.setState({
-        areaType: this.props.areaType,
       });
   }
 
@@ -177,7 +151,8 @@ export default class LineChart extends Component {
         datasets: [
           {
             data: this.state.dataGottenBack[0].data.map(d => d.newCasesByPublishDate).reverse(),
-
+            label: 'Daily Cases: UK',
+            borderColor: 'rgba(0, 200, 0, 1)',
           }]
         },
         options: {
@@ -205,19 +180,24 @@ export default class LineChart extends Component {
 
       var myChart1 = new Chart(myChartRef1, {
         type: "line",
+        title: 'COVID-19 patients in ventilation beds: UK',
         data: {
           //Bring in data
           labels: this.state.dataGottenBack[1].data.map(d => d.date).reverse(),
           datasets: [
             {
               data: this.state.dataGottenBack[1].data.map(d => d.covidOccupiedMVBeds).reverse(),
+              borderColor: '#F56565',
+              label: 'COVID-19 patients in ventilation beds: UK',
             }]
           },
           options: {
+            title: 'COVID-19 patients in ventilation beds: UK',
             scales: {
               xAxes: [{
                 type: 'time',
-                distribution: 'series'
+                distribution: 'series',
+                labelString: 'days'
               }]
             }
           }
@@ -255,13 +235,13 @@ export default class LineChart extends Component {
             labels: this.state.dataGottenBack[0].data.map(d => d.date).reverse(),
             datasets: [
               {
-                label: 'Chart 0',
+                label: 'Daily Cases',
                 data: transformedData,
                 fill: false,
                 borderColor: 'rgba(0, 200, 0, 1)',
               },
               {
-                label: 'Chart 1',
+                label: 'COVID-19 patients in ventilation beds: UK',
                 data: transformedData2,
                 fill: false,
                 borderColor: 'rgba(150, 50, 48, 1)'
@@ -275,13 +255,13 @@ export default class LineChart extends Component {
               intersect: false,
             },
             hover: {
-              mode: 'nearest',
+              // mode: 'nearest',
               // intersect: true
             },
             scales: {
               yAxes: [{
                 display: true,
-                labelString: "Frequency (Hz)",
+                labelString: "Total",
                 ticks: {
                   beginAtZero:true
                 }
