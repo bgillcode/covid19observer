@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Component } from "react";
 import './App.css';
-import LineChart from "./myChartsThis.js";
+import LineChart from "./chartsToDisplay.js";
+import LineChartForecasting from "./chartsToDisplayForecasting.js";
 import { Grid } from "@material-ui/core";
 import Header from "./header.js";
 import Footer from "./footer.js";
-import MappedClassOf from './createmap';
-import Map from './mapthis';
-import SimpleTabs from './mytabs';
+import SimpleTabs from './tabsToDisplay';
 import Tooltip from '@material-ui/core/Tooltip';
 import { Map as Maps, TileLayer, Marker, Popup, GeoJSON, CircleMarker as LeafletCircleMarker, Circle as CircleLeaflet } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
@@ -46,6 +45,17 @@ import CountriesNew from "./countries"
 //   },
 // }));
 
+export const pointerIcon = new L.Icon({
+  iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-green.png',
+  iconRetinaUrl: '../assets/pointerIcon.svg',
+  iconAnchor: [5, 55],
+  popupAnchor: [10, -44],
+  iconSize: [10, 15],
+  shadowUrl: '../assets/marker-shadow.png',
+  shadowSize: [15, 20],
+  shadowAnchor: [25, 30],
+})
+
 class App extends Component {
 
   constructor(props) {
@@ -72,6 +82,10 @@ class App extends Component {
       dataForMapGottenRegion: ["region", "London", "E12000007", "2020-07-29T00:00:00.000+00:00", "0", "35231", "51.49227142", "-0.30864"],
       loadedBorderInfo: 0,
       gottenCollatedRegionInformation: [[[51.505, 1.45], 5, 'test']],
+
+      schoolsInformation: [],
+
+      showSchoolsOnMap: false,
 
 
       areaDetailsForOverview: [{data: {Male: 0}}],
@@ -273,6 +287,18 @@ class App extends Component {
     return L.divIcon({ html: n, className: 'mycluster', iconSize: L.point(40, 40) });
   }
 
+
+  createClusterCustomIcon2(cluster) {
+    var markers = cluster.getAllChildMarkers();
+    var n = 0;
+    console.log(markers);
+    // for (var i = 0; i < markers.length; i++) {
+    //   // Adds the number passed to it in the props (params)
+    //   n += markers[i].number;
+    // }
+    return L.divIcon({ html: markers.length, className: 'mycluster2', iconSize: L.point(32, 32) });
+  }
+
   // getGeoJSONNewCountiesLower() {
   //   // console.log(CountriesNew);
   //   return CountiesLower;
@@ -372,15 +398,46 @@ class App extends Component {
           valueOfZoom = 5;
         }
 
+        var areatypegiven = 'nation';
+
+        // if (this.state.dataForSearch.some(dataSearching => input.toLowerCase().includes )) (words.some(word => input.toLowerCase().includes(word.toLowerCase()));
+
+        if (gottenPlaceTarget.trim().includes('United Kingdom')) {
+          console.log("first");
+          areatypegiven = 'overview'
+        } else if (this.state.dataForSearch.includes(gottenPlaceTarget.trim())) {
+          console.log("nation");
+          areatypegiven = 'nation'
+        } else if (this.state.dataForSearchRegion.includes(gottenPlaceTarget.trim())) {
+          console.log("region");
+          areatypegiven = 'region'
+        }
+
+        console.log(this.state.areaName.trim());
+
+        console.log(this.state.dataForSearchRegion);
+        console.log(gottenPlaceTarget.trim());
+
+        if (this.state.dataForSearchRegion.includes('North East')) {
+          console.log(128391203812);
+        }
+
+        console.log(gottenPlaceTarget);
+
+        console.log(areatypegiven);
+
         this.setState({
           dataGottenBackFromAPI: joined,
           latOfArea: joined[0].lat,
           lonOfArea: joined[0].lon,
           valueOfZoom: valueOfZoom,
           areaName: gottenPlaceTarget,
+          areaType: areatypegiven
         }, () => {
           console.log(this.state);
         })
+
+        console.log(this.state.areaName.trim());
 
       }
 
@@ -389,94 +446,41 @@ class App extends Component {
     });
 
     this.getPopulationDetails();
-
-    // event.preventDefault();
     console.log(this);
+  }
+
+
+
+  clickedSchoolSelectionText(event) {
+    const gottenPlaceTarget = event.currentTarget.innerHTML;
+    // const gottenPlaceTargetInner = gottenPlaceTarget.innerHTML;
+    console.log(gottenPlaceTarget);
+
+    var gottenSelection = this.state.showSchoolsOnMap;
+    console.log(gottenSelection);
+
+    if (gottenSelection == false) {
+      this.setState({
+        showSchoolsOnMap: true
+      });
+    } else if (gottenSelection == true) {
+        this.setState({
+          showSchoolsOnMap: false
+        });
+    }
+
+    console.log(this.state.showSchoolsOnMap);
   }
 
 
   loadPointsOnMap() {
     return;
-    // Set state at the beginning
-    // this.setState({
-    //   gottenCollatedRegionInformation: [51.505, 1.45, 5, 'test']
-    // }, () => {
-    //   console.log(this.state);
-    // })
-    //
-    // this.state.dataForMapGottenRegion.forEach({
-    //
-    // })
-    //
-    // this.state.dataForMapGottenRegion.map((areaName) => {
-    //   // console.log(a);
-    // } )
   }
 
-
-
-  //   {this.state.dataForMapGottenRegion[0].map((areaType, areaName, areaCode, date, newCasesBySpecimenDate, cumCasesBySpecimenDate, lat, long) =>
-  //     var q = [lat, long]
-  //     <Marker position={lat}, {long} number={ newCasesBySpecimenDate }>
-  //       <Popup>
-  //         <span>A pretty CSS3 popup. <br/> Easily customizable.</span>
-  //       </Popup>
-  //     </Marker>
-  //   )}
-  //
-  // }
-
-        // this.setState({
-        //   dataGottenBackFromAPI: [],
-        // }, () => {
-        //   console.log("cleared");
-        // })
-
-
-        // joined = data[0];
-      // })
-    //
-    //     console.log(joined)
-    //
-    //     // let valueOfZoom = 6;
-    //
-    //     if (joined[0].lat && joined[0].lon) {
-    //       // Change the zoom out if it's for the United Kingdom, otherwise the zoom will be more zoomed in if selecting a region
-    //       // if (gottenPlaceTarget.includes("United Kingdom")) {
-    //       //   valueOfZoom = 5;
-    //       // }
-    //
-    //
-    //       var gottenCollatedRegionInformationvar = this.state.gottenCollatedRegionInformation;
-    //
-    //
-    //       // thisCoordinatesOfThis = [joined[0].lat, joined[0].lon]
-    //       // thisAreaNameOfThis = region.areaName
-    //       // thisRegionOfThis = region.cumCasesBySpecimenDate
-    //
-    //       var newArrayOfThisNow = [[joined[0].lat, joined[0].lon], region.areaName, region.cumCasesBySpecimenDate]
-    //
-    //
-    //       var macv = gottenCollatedRegionInformationvar.concat(newArrayOfThisNow)
-    //
-    //
-    //       gottenCollatedRegionInformationvar = gottenCollatedRegionInformationvar.push(macv)
-    //
-    //       this.setState({
-    //         gottenCollatedRegionInformation: gottenCollatedRegionInformationvar
-    //       }, () => {
-    //         console.log(this.state);
-    //       })
-    //
-    //     }
-    //
-    //
-    // })
-    // // const urlToData = 'https://nominatim.openstreetmap.org/search?q=' + gottenPlaceTarget + ',%20United%20Kingdom';
-    // // // Need to give the format of it too
-    // // const formatForDataOutput = '&format=json';
-
-  // }
+  getDate() {
+    var dateGottenForUpdate = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+    return dateGottenForUpdate;
+  }
 
 
   chosenFromDropdown(event) {
@@ -516,22 +520,37 @@ class App extends Component {
     console.log(this.state.areaName);
     if (this.state.areaName == 'United Kingdom') {
       areatypegiven = 'overview'
-    } else {
+    } else if (this.state.areaName.includes(this.state.dataForSearch)) {
       areatypegiven = 'nation'
+    } else if (this.state.areaName.includes(this.state.dataForSearchRegion)) {
+      areatypegiven = 'region'
     }
     console.log(areatypegiven);
-    fetch('http://localhost:5000/apic/getdetailsofarea?areanamegiven=' + this.state.areaName + '&areatypegiven=' + areatypegiven).then(res => res.json()).then(data => {
+    var getURL = 'http://localhost:5000/apic/getdetailsofarea?areanamegiven=' + this.state.areaName.trim();
+    var getURL = 'http://localhost:5000/apic/getdetailsofarea?areanamegiven=' + this.state.areaName.trim();
+    console.log(getURL);
+    fetch(getURL).then(res => res.json()).then(data => {
       var qcget = data
       console.log(qcget);
       var mss = []
       mss.push(qcget)
       return mss
-    }).then( mss => {
+    }).then(
+
+
+      mss => {
+      if (mss) {
+
+
       this.setState({
         areaDetailsForOverview: mss,
       })
       console.log(mss);
       console.log(this.state.areaDetailsForOverview);
+    } else {
+      console.log("area not available yet");
+    }
+
     })
 
   }
@@ -600,7 +619,64 @@ class App extends Component {
 
 
 
+    var urlGotten5 = 'http://localhost:5000/apic/getschoolsdata'
+
+    fetch(urlGotten5).then(res => res.json()).then(data => {
+      if (data.data.latitude !== null && data.data.longitude !== null && data.data.latitude !== isNaN() && data.data.longitude !== isNaN()) {
+        var joined = this.state.schoolsInformation.concat(data)
+        return joined;
+      }
+
+    }).then( joined => {
+      this.setState({
+        schoolsInformation: joined,
+      })
+    }).then( () => {
+      this.showSchools();
+    })
+
+
   }
+
+  checkIfSchoolsTextHasBeenSelected() {
+    if (this.state.showSchoolsOnMap == false) {
+      console.log(this.state.showSchoolsOnMap);
+      return "View schools on the map";
+    }
+    else if (this.state.showSchoolsOnMap == true) {
+      console.log(this.state.showSchoolsOnMap);
+      return "Hide schools on the map";
+    }
+  }
+
+
+  renderMarkers = () => {
+    if (this.state.schoolsInformation.length) {
+    return this.state.schoolsInformation[0].data.map(
+        (marker) => {
+          if (marker.latitude !== null && marker.latitude !== isNaN()) {
+            return <Marker key={`${marker.URN}`} position={[parseFloat(marker.latitude), parseFloat(marker.longitude)]} icon={pointerIcon} > <Popup
+               minWidth={200}
+               closeButton={false}
+               onClose={popup => console.warn('popup-close', popup)}
+               >
+               <div>
+                 <b>School name: {marker.SCHNAME}</b>
+                 <p>School status: {marker.SCHSTATUS}</p>
+               </div>
+             </Popup></Marker>
+        }
+      }
+    )
+}
+}
+
+
+
+  showSchools() {
+    // return
+  }
+
 
 
   render() {
@@ -616,50 +692,44 @@ class App extends Component {
       console.log('done');
     }
 
+    const position = [this.state.lat, this.state.lng]
+
+
+
     return (
+
       <Grid container direction="column">
         <Grid item>
           <Header />
         </Grid>
         <Grid item container>
-          <Grid item xs={2} sm={2} md={2}>
+          <Grid item xs={3} sm={3} md={2}>
             <div>
               <div id="last-updated-on">
                 <p>
-                  Last updated on: "{Date}"
+                  {/*Last updated on: {this.getDate()}*/}
                 </p>
                 </div>
               {this.displayTextBox()}
 
               {filteredSearchPlaces.map((place, i)=> {
-                return <li onClick={this.clickedPlace.bind(this)} key={i}> {place} </li>;
+                return <li style={{cursor: 'pointer'}} onClick={this.clickedPlace.bind(this)} key={i}> {place} </li>;
                 })}
               </div>
 
-              <div id='site-information'>
-                <ul>
-                <li>Site Information</li>
-                <li>Accessibility</li>
-                <li>Data sources</li>
-                <li>Map information</li>
-                <li>News and information</li>
-                <li>COVID-19 Basics</li>
-                <li>View Desktop / Mobile version</li>
-                </ul>
-                </div>
 
             </Grid>
             {/* Map */}
-            <Grid item xs={10} sm={4} md={4}>
+            <Grid item xs={9} sm={3} md={4}>
 
 
               <div>
                 <div id='currently-selected-label-above-map'>
-                  <p>Currently displaying: {this.state.areaName}
+                  <p>Currently displaying on the map: {this.state.areaName}
                     </p>
                 </div>
                 <FormControl>
-                  <InputLabel htmlFor="age-native-simple">Currently Displaying:</InputLabel>
+                  <InputLabel htmlFor="age-native-simple">Currently Displaying on the map:</InputLabel>
                   <Select
                     native
                     onChange={this.handleChange.bind(this)}
@@ -690,6 +760,38 @@ class App extends Component {
                   attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   />
 
+
+
+
+
+
+
+
+
+                {this.state.showSchoolsOnMap == true ?
+                <MarkerClusterGroup iconCreateFunction={this.createClusterCustomIcon2}>
+                  {this.renderMarkers()}
+                </MarkerClusterGroup> :
+
+                <Marker position={[55.2970314, -1.72889996]} number={35284}>
+                  <Popup
+                    minWidth={200}
+                    closeButton={false}
+                    onClose={popup => console.warn('popup-close', popup)}
+                    >
+                    <div>
+                      <b>Location: North East</b>
+                      <p>Count: {35284}</p>
+                    </div>
+                  </Popup>
+                </Marker>
+              }
+
+
+
+
+
+
                 {/* Put <MarkerClusterGroup {...props} /> inside react-leaflet after <TileLayer /> */}
 
                 {/*<MarkerClusterGroup>
@@ -713,6 +815,12 @@ class App extends Component {
 
                   </MarkerClusterGroup>
                   */}
+
+
+
+
+
+
 
                   <MarkerClusterGroup iconCreateFunction={this.createClusterCustomIcon}>
 
@@ -862,6 +970,23 @@ class App extends Component {
                   </Marker>
 
 
+
+
+
+                  <Marker position={[55.2970314, -1.72889996]} number={35284}>
+                    <Popup
+                      minWidth={200}
+                      closeButton={false}
+                      onClose={popup => console.warn('popup-close', popup)}
+                      >
+                      <div>
+                        <b>Location: North East</b>
+                        <p>Count: {35284}</p>
+                      </div>
+                    </Popup>
+                  </Marker>
+
+
                   {/* // <GeoJSON data={this.getGeoJSONNew()} style={this.getStyle(1, 2)} /> */}
                   <GeoJSON data={this.getGeoJSONNew()} style={this.style} onEachFeature={this.onEachFeature.bind(this)} ref="geojson">
 
@@ -870,6 +995,10 @@ class App extends Component {
 
 
                 </Maps>
+
+                <div>
+                  <span onClick={this.clickedSchoolSelectionText.bind(this)} style={{cursor: 'pointer'}} id="schoolSelectionText">{this.checkIfSchoolsTextHasBeenSelected()}</span>
+                </div>
 
 
 

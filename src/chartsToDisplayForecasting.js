@@ -16,7 +16,7 @@ import AspectRatioIcon from '@material-ui/icons/AspectRatio';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 
-export default class LineChart extends Component {
+export default class LineChartForecasting extends Component {
 
   constructor(props) {
     super(props);
@@ -24,7 +24,7 @@ export default class LineChart extends Component {
       // This is where the data is being stored
       dataGottenBack : [],
       getDataForChart: "",
-      areaType: "",
+      areaType: "overview",
       areaName: "",
 
       chart0Title: "Daily Cases:",
@@ -39,7 +39,6 @@ export default class LineChart extends Component {
       ifTesting: false,
       ifHospital: false,
 
-      urlForChart0: 'https://api.coronavirus-staging.data.gov.uk/v1/data?filters=areaName=United%2520Kingdom;areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesByPublishDate%22:%22newCasesByPublishDate%22,%22cumCasesByPublishDate%22:%22cumCasesByPublishDate%22%7D&format=json',
     }
 
   }
@@ -53,23 +52,29 @@ export default class LineChart extends Component {
   // Chart 2
   chartRef2 = React.createRef();
 
-  // Get the data and then run the update for the chart to be displayed for each one
-  componentDidMount() {
+  runAllCharts() {
+    console.log("test");
     this.setState({
-      areaName: this.props.areaName,
-      areaType: this.props.areaType,
-      ifOverview: this.props.ifOverview,
-      ifCases: this.props.ifCases,
-      ifDeaths: this.props.ifDeaths,
-      ifTesting: this.props.ifTesting,
-      ifHospital: this.props.ifHospital,
-      // chart0Title: this.props.chart0Title,
-      // chart1Title: this.props.chart1Title,
-      // chart2Title: this.props.chart2Title,
-    })
+      dataGottenBack: [],
+      getDataForChart: "",
+
+    });
 
     if (this.state.ifOverview) {
-      fetch('https://api.coronavirus-staging.data.gov.uk/v1/data?filters=areaName=United%2520Kingdom;areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesByPublishDate%22:%22newCasesByPublishDate%22,%22cumCasesByPublishDate%22:%22cumCasesByPublishDate%22%7D&format=json').then(res => res.json()).then(data => {
+      var baseURL = 'http://localhost:5000'
+      var apiName = 'apic'
+      var getRoute = 'getoverview'
+      var getFieldForRoute1 = 'areatype'
+      var getFieldForRoute2 = ''
+      if (this.state.areaName !== "United Kingdom") {
+        getFieldForRoute2 = 'areanamegiven'
+      } else {
+        getFieldForRoute2 = 'areaname'
+      }
+
+      var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+      console.log(urlGotten);
+      fetch(urlGotten).then(res => res.json()).then(data => {
         var joined = this.state.dataGottenBack.concat(data)
         // var dataToAdd = data;
 
@@ -86,7 +91,14 @@ export default class LineChart extends Component {
       this.setState({
         getDataForChart: "no",
       })
-      fetch('https://api.coronavirus-staging.data.gov.uk/v1/data?filters=areaType=nation;areaName=England&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22,%22cumCasesBySpecimenDate%22:%22cumCasesBySpecimenDate%22%7D&format=json').then(res => res.json()).then(data => {
+      var baseURL = 'http://localhost:5000'
+      var apiName = 'apic'
+      var getRoute = 'getoverview'
+      var getFieldForRoute1 = 'areatype'
+      var getFieldForRoute2 = 'areanamegiven'
+      var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+      console.log(urlGotten);
+      fetch(baseURL).then(res => res.json()).then(data => {
         var joined = this.state.dataGottenBack.concat(data)
         // var dataToAdd = data;
 
@@ -101,7 +113,113 @@ export default class LineChart extends Component {
       });
     }
 
-    fetch('https://api.coronavirus-staging.data.gov.uk/v1/data?filters=areaName=United%2520Kingdom;areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22covidOccupiedMVBeds%22:%22covidOccupiedMVBeds%22%7D&format=json').then(res => res.json()).then(data => {
+    var baseURL2 = 'http://localhost:5000'
+    var apiName = 'apic'
+    var getRoute = 'getoverview'
+    var getFieldForRoute1 = 'areatype'
+    var getFieldForRoute2 = ''
+    if (this.state.areaName !== "United Kingdom") {
+      getFieldForRoute2 = 'areanamegiven'
+    } else {
+      getFieldForRoute2 = 'areaname'
+    }
+    var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+    console.log(urlGotten);
+
+    console.log();
+
+    fetch(urlGotten).then(res => res.json()).then(data => {
+      var joined = this.state.dataGottenBack.concat(data)
+      // var dataToAdd = data;
+
+      this.setState({
+        dataGottenBack: joined,
+
+      }, () => {
+        this.updateLineChart1();
+        this.updateLineChart2();
+      })
+
+    });
+  }
+
+  // Get the data and then run the update for the chart to be displayed for each one
+  componentDidMount() {
+    this.setState({
+      areaName: this.props.areaName.trim(),
+      areaType: this.props.areaType,
+      ifOverview: this.props.ifOverview,
+      ifCases: this.props.ifCases,
+      ifDeaths: this.props.ifDeaths,
+      ifTesting: this.props.ifTesting,
+      ifHospital: this.props.ifHospital,
+      // chart0Title: this.props.chart0Title,
+      // chart1Title: this.props.chart1Title,
+      // chart2Title: this.props.chart2Title,
+    })
+
+    if (this.state.ifOverview) {
+      var baseURL = 'http://localhost:5000'
+      var apiName = 'apic'
+      var getRoute = 'getoverview'
+      var getFieldForRoute1 = 'areatype'
+      var getFieldForRoute2 = 'areaname'
+      var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+      console.log(urlGotten);
+      fetch(urlGotten).then(res => res.json()).then(data => {
+        var joined = this.state.dataGottenBack.concat(data)
+        // var dataToAdd = data;
+
+        this.setState({
+          dataGottenBack: joined,
+          getDataForChart: this.props.getDataForChart,
+
+        }, () => {
+          this.updateLineChart0();
+        })
+
+      });
+    } else {
+      this.setState({
+        getDataForChart: "no",
+      })
+      var baseURL = 'http://localhost:5000'
+      var apiName = 'apic'
+      var getRoute = 'getoverview'
+      var getFieldForRoute1 = 'areatype'
+      var getFieldForRoute2 = 'areanamegiven'
+      var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+      console.log(urlGotten);
+      fetch(baseURL).then(res => res.json()).then(data => {
+        var joined = this.state.dataGottenBack.concat(data)
+        // var dataToAdd = data;
+
+        this.setState({
+          dataGottenBack: joined,
+          getDataForChart: this.props.getDataForChart,
+
+        }, () => {
+          this.updateLineChart0();
+        })
+
+      });
+    }
+
+    var baseURL2 = 'http://localhost:5000'
+    var apiName = 'apic'
+    var getRoute = 'getoverview'
+    var getFieldForRoute1 = 'areatype'
+    // if (this.state.areaType !== 'overview') {
+    // var getFieldForRoute2 = 'areanamegiven'
+  // } else {
+    var getFieldForRoute2 = 'areaname'
+  // }
+    var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+    console.log(urlGotten);
+
+    console.log();
+
+    fetch(urlGotten).then(res => res.json()).then(data => {
       var joined = this.state.dataGottenBack.concat(data)
       // var dataToAdd = data;
 
@@ -123,8 +241,14 @@ export default class LineChart extends Component {
   if (this.props.areaName !== prevProps.areaName) {
     console.log(23423942);
     this.setState({
-        areaName: this.props.areaName,
+        areaName: this.props.areaName.trim(),
+        areaType: this.props.areaType,
+      }, () => {
+        this.runAllCharts();
       });
+
+
+
   }
 
 
@@ -142,6 +266,7 @@ export default class LineChart extends Component {
     if (this.state.ifOverview) {
 
       if (this.state.ifCases) {
+        console.log(this.state);
 
     var myChart0 = new Chart(myChartRef0, {
       type: "line",
@@ -151,7 +276,7 @@ export default class LineChart extends Component {
         datasets: [
           {
             data: this.state.dataGottenBack[0].data.map(d => d.newCasesByPublishDate).reverse(),
-            label: 'Daily Cases: UK',
+            label: 'Daily Cases: ' + this.state.areaName,
             borderColor: 'rgba(0, 200, 0, 1)',
           }]
         },
@@ -180,7 +305,7 @@ export default class LineChart extends Component {
 
       var myChart1 = new Chart(myChartRef1, {
         type: "line",
-        title: 'COVID-19 patients in ventilation beds: UK',
+        title: 'COVID-19 patients in ventilation beds: ' + this.state.areaName,
         data: {
           //Bring in data
           labels: this.state.dataGottenBack[1].data.map(d => d.date).reverse(),
@@ -188,11 +313,11 @@ export default class LineChart extends Component {
             {
               data: this.state.dataGottenBack[1].data.map(d => d.covidOccupiedMVBeds).reverse(),
               borderColor: '#F56565',
-              label: 'COVID-19 patients in ventilation beds: UK',
+              label: 'COVID-19 patients in ventilation beds: ' + this.state.areaName,
             }]
           },
           options: {
-            title: 'COVID-19 patients in ventilation beds: UK',
+            title: 'COVID-19 patients in ventilation beds: ' + this.state.areaName,
             scales: {
               xAxes: [{
                 type: 'time',
@@ -241,7 +366,7 @@ export default class LineChart extends Component {
                 borderColor: 'rgba(0, 200, 0, 1)',
               },
               {
-                label: 'COVID-19 patients in ventilation beds: UK',
+                label: 'COVID-19 patients in ventilation beds: ' + this.state.areaName,
                 data: transformedData2,
                 fill: false,
                 borderColor: 'rgba(150, 50, 48, 1)'
