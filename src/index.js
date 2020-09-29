@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Chart from "chart.js";
-import LineChart from "./myChartsThis.js";
+import LineChart from "./chartsToDisplay.js";
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
