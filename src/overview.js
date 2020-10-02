@@ -13,12 +13,23 @@ import { Grid } from "@material-ui/core";
 
 export default class Overview extends Component {
 
+  constructor(props) {
+    super(props)
+
+
+    this.state = {
+      language: '',
+    }
+
+  }
+
 
 
   populateDetails() {
+    console.log(this);
     var gottenThis = " "
     if (this.props.areaDetailsForOverview[0].data !== null) {
-      console.log(this.props.areaDetailsForOverview);
+      // console.log(this.props.areaDetailsForOverview);
       var populationAllAges = "Not available"
       if (this.props.areaDetailsForOverview[0].data['All ages']) {
         populationAllAges = this.props.areaDetailsForOverview[0].data['All ages']
@@ -28,10 +39,11 @@ export default class Overview extends Component {
         populationMale = this.props.areaDetailsForOverview[0].data['Male']
       }
       var populationFemale = "Not available"
+
       if (this.props.areaDetailsForOverview[0].data['Female']) {
-        populationAllAges = this.props.areaDetailsForOverview[0].data['Female']
+        populationFemale = this.props.areaDetailsForOverview[0].data['Female']
       }
-      console.log(gottenThis);
+      // console.log(gottenThis);
     }
     return (
 
@@ -69,7 +81,8 @@ export default class Overview extends Component {
   render() {
     return (
       <React.Fragment>
-      {this.populateDetails()}<LineChart getDataForChart={this.props.areaName} ifOverview={1} ifCases={1} areaName={this.props.areaName} areaType={this.props.areaType} />
+      {this.populateDetails()}
+      <LineChart getDataForChart={this.props.areaName} ifOverview={1} ifCases={1} areaName={this.props.areaName} areaType={this.props.areaType} />
       </React.Fragment>
     )
   }

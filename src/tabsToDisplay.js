@@ -11,6 +11,7 @@ import './App.css';
 import { Grid } from "@material-ui/core";
 import { Component } from "react";
 import Overview from './overview';
+import { Paper } from '@material-ui/core';
 
 
 function TabContainer(props) {
@@ -41,16 +42,18 @@ class SimpleTabs extends React.Component {
   componentDidMount() {
     if (this.props.open) {
       this.setState({ Tabvalue: this.props.open });
-      console.log(this.props);
+      // console.log(this.props);
 
     }
   }
 
   handleChange = (event, value) => {
     this.setState({ Tabvalue: value });
-    console.log(this.props);
+    // console.log(this.props);
     // console.log(this.props.areaDetailsForOverview[0].data.Male);
   };
+
+
 
 
   render() {
@@ -58,7 +61,7 @@ class SimpleTabs extends React.Component {
     const { Tabvalue } = this.state;
 
     let value = Tabvalue;
-    console.log(this.props.areaName);
+    // console.log(this.props.areaName);
 
     return (
       <div className={classes.root}>
@@ -70,21 +73,20 @@ class SimpleTabs extends React.Component {
       aria-label="scrollable auto tabs example"
       >
       <Tab style={{ minWidth: 30 }} label="Overview" />
-      <Tab style={{ minWidth: 30 }} label="Charts" />
       <Tab style={{ minWidth: 30 }} label="Forecasting" />
       <Tab style={{ minWidth: 30 }} label="Cases" />
       <Tab style={{ minWidth: 30 }} label="Hospitalised" />
       <Tab style={{ minWidth: 30 }} label="Deaths" />
       <Tab style={{ minWidth: 30 }} label="Testing" />
           </Tabs>
-        </AppBar>
+        </AppBar><Paper style={{maxHeight: 600, overflow: 'auto'}}>
         {value === 0 && <TabContainer style={{ fontSize: 12 }}><Overview areaName={this.props.areaName} areaType={this.props.areaType} getDataForChart={this.props.getDataForChart} areaDetailsForOverview={this.props.areaDetailsForOverview}/></TabContainer>}
-        {value === 1 && <TabContainer><LineChart getDataForChart={this.props.areaName} ifOverview={1} ifCases={1} areaName={this.props.areaName} areaType={this.props.areaType} /></TabContainer>}
-        {value === 2 && <TabContainer><LineChartForecasting getDataForChart={this.props.areaName} ifOverview={1} ifCases={1} areaName={this.props.areaName} areaType={this.props.areaType} /></TabContainer>}
-        {value === 3 && <TabContainer>Cases</TabContainer>}
-        {value === 4 && <TabContainer>Hospitalised</TabContainer>}
-        {value === 5 && <TabContainer>Deaths</TabContainer>}
-        {value === 6 && <TabContainer>Testing</TabContainer>}
+        {value === 1 && <TabContainer><LineChartForecasting getDataForChart={this.props.areaName} ifOverview={1} ifCases={1} areaName={this.props.areaName} areaType={this.props.areaType} /></TabContainer>}
+        {value === 2 && <TabContainer>Cases</TabContainer>}
+        {value === 3 && <TabContainer>Hospitalised</TabContainer>}
+        {value === 4 && <TabContainer>Deaths</TabContainer>}
+        {value === 5 && <TabContainer>Testing</TabContainer>}
+      </Paper>
       </div>
     );
   }

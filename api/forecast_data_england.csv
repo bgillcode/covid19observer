@@ -1,0 +1,17 @@
+Name,Date time,Maximum Temperature,Minimum Temperature,Temperature,Wind Chill,Heat Index,Chance Precipitation (%),Precipitation,Snow,Snow Depth,Wind Speed,Wind Gust,Visibility,Cloud Cover,Relative Humidity,Conditions
+England,09/30/2020,58.6,57.8,58.1,,,100,0.24,0,0,10,27.7,2.8,100,85.5,"Rain, Overcast"
+England,10/01/2020,59.6,50.4,54.7,,,100,0.09,0,0,7.4,21.3,15,73.3,66.4,"Rain, Partially cloudy"
+England,10/02/2020,60,51.2,54.1,,,100,0.6,0,0,8.4,38.3,2.4,85.8,71.2,"Rain, Overcast"
+England,10/03/2020,56.7,50.6,54.1,,,90.5,1.11,0,0,7.9,24.2,2.7,89.4,83.2,"Rain, Overcast"
+England,10/04/2020,55.8,47.9,51.5,44.7,,85.6,0.14,0,0,6.7,19,4.4,81.6,71.6,"Rain, Overcast"
+England,10/05/2020,51.3,51.2,51.2,,,71.4,0.12,0,0,7.9,19,6.6,96.1,75.3,"Rain, Overcast"
+England,10/06/2020,60.3,51.5,55.5,,,57,0.11,0,0,8.2,23.5,6.5,72.4,73.5,"Rain, Partially cloudy"
+England,10/07/2020,57.5,53.3,55.4,,,23.7,0.02,0,0,11,26.6,15,82.6,73.8,Overcast
+England,10/08/2020,59.3,49.4,54.3,47.5,,71.4,0,0,0,6,18.8,15,49.5,72.4,"Rain, Partially cloudy"
+England,10/09/2020,60.7,52.8,56.6,,,71.4,0.3,0,0,9.8,27.5,4.4,92.4,70.1,"Rain, Overcast"
+England,10/10/2020,57.6,49.9,53.5,47.7,,61.9,0.15,0,0,10.7,32.4,10.4,59.1,70.1,"Rain, Partially cloudy"
+England,10/11/2020,59.1,52.6,56,,,38,0.19,0,0,8.3,21.5,5.2,73.9,73.2,Partially cloudy
+England,10/12/2020,58.6,53.5,55.1,,,38,0.47,0,0,7.2,15.7,5.9,85.9,79.7,Overcast
+England,10/13/2020,59.3,52.4,55.3,,,33.2,0,0,0,2.9,8.3,15,87,74.4,Overcast
+England,10/14/2020,61.6,50.8,56,,,28.6,0,0,0,5.6,14.1,15,19.8,74.5,Clear
+England,10/15/2020,58.9,55.1,56.6,,,38,0.05,0,0,2.7,10.1,14.5,95.1,77.2,Overcast

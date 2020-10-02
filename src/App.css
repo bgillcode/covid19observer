@@ -44,7 +44,7 @@
 }
 
 #site-information {
-  text-align: center;
+  text-align: left;
   /* position: absolute; */
   bottom: 0;
   border-style: dotted;
@@ -70,4 +70,8 @@ background-color: yellow;
 text-align: center;
 height: 5px;
 font-size: 10px;
+}
+
+.markercluster-map {
+  border: 1px;
 }

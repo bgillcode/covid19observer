@@ -17,10 +17,12 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
-
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import SearchIcon from "@material-ui/icons/Search";
+import { Paper } from '@material-ui/core';
+
+
 
 import Choropleth from 'react-leaflet-choropleth'
 
@@ -30,20 +32,9 @@ import axios from 'axios';
 
 import L from "leaflet";
 
-// Import the countries boundaries for the UK
 import CountriesNew from "./countries"
 
-// // Import counties boundaries for the UK
-// import CountiesLower from "./countieslower"
-
-// const useStylesTextField = makeStyles((theme) => ({
-//   root: {
-//     '& > *': {
-//       margin: theme.spacing(1),
-//       width: '25ch',
-//     },
-//   },
-// }));
+import RegionsBoundaries from "./regions"
 
 export const pointerIcon = new L.Icon({
   iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-green.png',
@@ -69,6 +60,7 @@ class App extends Component {
       search: '',
       dataForSearch: ['United Kingdom', 'England', 'Northern Ireland', 'Scotland', 'Wales'],
       dataForSearchRegion: ['East of England', 'East Midlands', 'London', 'North East', 'North West', 'South East', 'South West', 'West Midlands', 'Yorkshire and The Humber'],
+      dataForSearchUTLA: ['Barking and Dagenham', 'Barnet', 'Barnsley', 'Bath and North East Somerset', 'Bedford', 'Bexley', 'Birmingham', 'Blackburn with Darwen', 'Blackpool', 'Blaenau Gwent', 'Bolton', 'Bournemouth, Christchurch and Poole', 'Bracknell Forest', 'Bradford', 'Brent', 'Bridgend', 'Brighton and Hove', 'Bristol, City of', 'Bromley', 'Buckinghamshire', 'Bury', 'Caerphilly', 'Calderdale', 'Cambridgeshire', 'Camden', 'Cardiff', 'Carmarthenshire', 'Central Bedfordshire', 'Ceredigion', 'Cheshire East', 'Cheshire West and Chester', 'Conwy', 'Cornwall and Isles of Scilly', 'County Durham', 'Coventry', 'Croydon', 'Cumbria', 'Darlington', 'Denbighshire', 'Derby', 'Derbyshire', 'Devon', 'Doncaster', 'Dorset', 'Dudley', 'Ealing', 'East Riding of Yorkshire', 'East Sussex', 'Enfield', 'Essex', 'Flintshire', 'Gateshead', 'Gloucestershire', 'Greenwich', 'Gwynedd', 'Hackney and City of London', 'Halton', 'Hammersmith and Fulham', 'Hampshire', 'Haringey', 'Harrow', 'Hartlepool', 'Havering', 'Herefordshire, County of', 'Hertfordshire', 'Hillingdon', 'Hounslow', 'Isle of Anglesey', 'Isle of Wight', 'Islington', 'Kensington and Chelsea', 'Kent', 'Kingston upon Hull, City of', 'Kingston upon Thames', 'Kirklees', 'Knowsley', 'Lambeth', 'Lancashire', 'Leeds', 'Leicester', 'Leicestershire', 'Lewisham', 'Lincolnshire', 'Liverpool', 'Luton', 'Manchester', 'Medway', 'Merthyr Tydfil', 'Merton', 'Middlesbrough', 'Milton Keynes', 'Monmouthshire', 'Neath Port Talbot', 'Newcastle upon Tyne', 'Newham', 'Newport', 'Norfolk', 'North East Lincolnshire', 'North Lincolnshire', 'North Somerset', 'North Tyneside', 'North Yorkshire', 'Northamptonshire', 'Northumberland', 'Nottingham', 'Nottinghamshire', 'Oldham', 'Oxfordshire', 'Pembrokeshire', 'Peterborough', 'Plymouth', 'Portsmouth', 'Powys', 'Reading', 'Redbridge', 'Redcar and Cleveland', 'Rhondda Cynon Taf', 'Richmond upon Thames', 'Rochdale', 'Rotherham', 'Rutland', 'Salford', 'Sandwell', 'Sefton', 'Sheffield', 'Shropshire', 'Slough', 'Solihull', 'Somerset', 'South Gloucestershire', 'South Tyneside', 'Southampton', 'Southend-on-Sea', 'Southwark', 'St. Helens', 'Staffordshire', 'Stockport', 'Stockton-on-Tees', 'Stoke-on-Trent', 'Suffolk', 'Sunderland', 'Surrey', 'Sutton', 'Swansea', 'Swindon', 'Tameside', 'Telford and Wrekin', 'Thurrock', 'Torbay', 'Torfaen', 'Tower Hamlets', 'Trafford', 'Vale of Glamorgan', 'Wakefield', 'Walsall', 'Waltham Forest', 'Wandsworth', 'Warrington', 'Warwickshire', 'West Berkshire', 'West Sussex', 'Westminster', 'Wigan', 'Wiltshire', 'Windsor and Maidenhead', 'Wirral', 'Wokingham', 'Wolverhampton', 'Worcestershire', 'Wrexham', 'York'],
       dataGottenBackFromAPI: [],
       chosenFromDropdownArray: 10,
 
@@ -79,7 +71,7 @@ class App extends Component {
       valueOfZoom: 5,
       dataForMapGotten: [],
       dataForMapGottenNation: [],
-      dataForMapGottenRegion: ["region", "London", "E12000007", "2020-07-29T00:00:00.000+00:00", "0", "35231", "51.49227142", "-0.30864"],
+      dataForMapGottenRegion: [],
       loadedBorderInfo: 0,
       gottenCollatedRegionInformation: [[[51.505, 1.45], 5, 'test']],
 
@@ -92,6 +84,7 @@ class App extends Component {
     }
 
     this.geojson = L.geoJson();
+    this.geojson2 = L.geoJson();
 
     this.getColor = this.getColor.bind(this);
     this.style = this.style.bind(this);
@@ -115,13 +108,43 @@ class App extends Component {
 // }
 
   getGeoJSONNew() {
-    // console.log(CountriesNew);
+    // console.log(this.state.valueOfZoom);
     return CountriesNew;
+  }
+
+
+  getGeoJSONNewRegions() {
+    return RegionsBoundaries;
+
+    // return RegionsBoundaries;
+    // console.log(CountriesNew);
+
     // console.log();
+  }
+
+  getGeoJSONAppear() {
+    if (this.state.valueOfZoom <= 6) {
+      this.geojson.clearLayers();
+        console.log('stateboundariesloaded');
+      return(
+      <GeoJSON data={this.getGeoJSONNew()} style={this.style} key={4} onEachFeature={this.onEachFeature.bind(this)} ref="geojson">
+
+      </GeoJSON>
+    )
+
+  } else {
+    console.log('regionsboundariesloaded');
+    return(
+    <GeoJSON data={this.getGeoJSONNewRegions()} style={this.style} key={5} onEachFeature={this.onEachFeature.bind(this)} ref="geojson">
+    </GeoJSON>
+  )
+  }
+
   }
 
   getColor(d) {
     console.log(d);
+    if (this.state.valueOfZoom <= 6) {
     return d > 200000 ? '#800026' :
     d > 18000  ? '#FD8D3C' :
     d > 17000  ? '#FEB24C' :
@@ -130,26 +153,61 @@ class App extends Component {
     d > 20   ? '#FEF7E3' :
     d > 10   ? '#E3EAFE' :
     '#99cc99';
+  } else if (this.state.valueOfZoom > 6 && this.state.valueOfZoom < 8) {
+    console.log(d);
+    return d > 50000 ? '#800026' :
+    d > 40000  ? '#FD8D3C' :
+    d > 30000  ? '#FEB24C' :
+    d > 20000  ? '#99cc99' :
+    d > 10000   ? '#FEECBB' :
+    d > 5000   ? '#FEF7E3' :
+    d > 50   ? '#E3EAFE' :
+    '#99cc99';
+    }
   }
 
   style(feature) {
     var gottenFeature = ''
     var gottenFeatureNumber = 0
-    console.log(feature);
-    console.log(this.state.dataForMapGottenNation.length);
+
+    if (this.state.valueOfZoom <= 6) {
+
+
+    // console.log(feature);
+    // console.log(this.state.dataForMapGottenNation.length);
     if (this.state.dataForMapGottenNation.length > 0) {
-      console.log(this.state.dataForMapGottenNation[0]);
-      console.log(this.state.dataForMapGottenNation[0].data);
+      // console.log(this.state.dataForMapGottenNation[0]);
+      // console.log(this.state.dataForMapGottenNation[0].data);
       for (let dataFromStateArray of this.state.dataForMapGottenNation[0].data) {
-        console.log(dataFromStateArray);
+        // console.log(dataFromStateArray);
         if (dataFromStateArray.areaName == feature.properties.ctry19nm) {
           gottenFeature = dataFromStateArray.areaName
           gottenFeatureNumber = dataFromStateArray.cumCasesByPublishDate
-          console.log(gottenFeature + ": " + gottenFeatureNumber);
+          // console.log(gottenFeature + ":: " + gottenFeatureNumber);
           break;
         }
       }
     }
+  } else if (this.state.valueOfZoom > 6 && this.state.valueOfZoom < 8) {
+    // console.log("into style for region");
+    //
+    // console.log(this.state);
+
+    if (this.state.dataForMapGottenRegion.length > 0) {
+      console.log(this.state.dataForMapGottenRegion);
+      // console.log(this.state.dataForMapGottenNation[0]);
+      // console.log(this.state.dataForMapGottenNation[0].data);
+      for (let dataFromStateRegion of this.state.dataForMapGottenRegion[0].data) {
+        console.log(dataFromStateRegion);
+        if (dataFromStateRegion.areaName == feature.properties.rgn19nm) {
+          gottenFeature = dataFromStateRegion.areaName
+          gottenFeatureNumber = dataFromStateRegion.cumCasesBySpecimenDate
+          // console.log(gottenFeature + ":: " + gottenFeatureNumber);
+          break;
+        }
+      }
+    }
+  }
 
     return {
       fillColor: this.getColor(gottenFeatureNumber),
@@ -165,17 +223,11 @@ class App extends Component {
   gotNewNumber(feature) {
     var gottenFeature = ''
     var gottenFeatureNumber = 0
-    console.log(feature);
-    console.log(this.state.dataForMapGottenNation.length);
     if (this.state.dataForMapGottenNation.length > 0) {
-      console.log(this.state.dataForMapGottenNation[0]);
-      console.log(this.state.dataForMapGottenNation[0].data);
       for (let dataFromStateArray of this.state.dataForMapGottenNation[0].data) {
-        console.log(dataFromStateArray);
         if (dataFromStateArray.areaName == feature.properties.ctry19nm) {
           gottenFeature = dataFromStateArray.areaName
           gottenFeatureNumber = dataFromStateArray.cumCasesByPublishDate
-          console.log(gottenFeature + ": " + gottenFeatureNumber);
           break;
         }
       }
@@ -188,7 +240,6 @@ class App extends Component {
 
 
   highlightFeature(e) {
-    console.log(e);
     var layer = e.target;
 
     layer.setStyle({
@@ -200,28 +251,41 @@ class App extends Component {
 
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
       layer.bringToFront();
-      // layer.bindPopup("a");
     }
 
 
     var gottenFeature = ''
     var gottenFeatureNumber = 0
-    console.log(layer);
-    console.log(this.state.dataForMapGottenNation.length);
-    console.log(this);
-    if (this.state.dataForMapGottenNation.length > 0) {
-      console.log(this.state.dataForMapGottenNation[0]);
-      console.log(this.state.dataForMapGottenNation[0].data);
-      for (let dataFromStateArray of this.state.dataForMapGottenNation[0].data) {
-        console.log(dataFromStateArray);
-        if (dataFromStateArray.areaName == layer.feature.properties.ctry19nm) {
-          gottenFeature = dataFromStateArray.areaName
-          gottenFeatureNumber = dataFromStateArray.cumCasesByPublishDate
-          console.log(gottenFeature + ": " + gottenFeatureNumber);
-          break;
+
+    if (this.state.valueOfZoom <= 6) {
+
+      if (this.state.dataForMapGottenNation.length > 0) {
+        for (let dataFromStateArray of this.state.dataForMapGottenNation[0].data) {
+          if (dataFromStateArray.areaName == layer.feature.properties.ctry19nm) {
+            gottenFeature = dataFromStateArray.areaName
+            gottenFeatureNumber = dataFromStateArray.cumCasesByPublishDate
+            break;
+          }
         }
       }
+
     }
+
+
+      else if (this.state.valueOfZoom > 6 && this.state.valueOfZoom < 8) {
+        for (let dataFromRegionArray of this.state.dataForMapGottenRegion[0].data) {
+          // console.log(dataFromRegionArray);
+          if (dataFromRegionArray.areaName == layer.feature.properties.rgn19nm) {
+            gottenFeature = dataFromRegionArray.areaName
+            gottenFeatureNumber = dataFromRegionArray.cumCasesBySpecimenDate
+            break;
+          }
+        }
+      }
+
+
+
+
 
 
 
@@ -230,32 +294,46 @@ class App extends Component {
     layer.openPopup();
   }
 
+
   resetHighlight(e) {
-    console.log(this.geojson);
-    // component
-    console.log(e);
-
     var feature = e.target.feature;
-
-
     var gottenFeature = ''
     var gottenFeatureNumber = 0
-    console.log(feature);
-    console.log(this.state.dataForMapGottenNation.length);
+    // console.log(feature);
+    // console.log(this.state.dataForMapGottenNation.length);
+
+    if (this.state.valueOfZoom < 6) {
+
     if (this.state.dataForMapGottenNation.length > 0) {
-      console.log(this.state.dataForMapGottenNation[0]);
-      console.log(this.state.dataForMapGottenNation[0].data);
+      // console.log(this.state.dataForMapGottenNation[0]);
+      // console.log(this.state.dataForMapGottenNation[0].data);
       for (let dataFromStateArray of this.state.dataForMapGottenNation[0].data) {
-        console.log(dataFromStateArray);
+        // console.log(dataFromStateArray);
         if (dataFromStateArray.areaName == feature.properties.ctry19nm) {
           gottenFeature = dataFromStateArray.areaName
           gottenFeatureNumber = dataFromStateArray.cumCasesByPublishDate
-          console.log(gottenFeature + ": " + gottenFeatureNumber);
           break;
         }
       }
     }
+  }
 
+
+      else if (this.state.valueOfZoom > 6 && this.state.valueOfZoom < 8) {
+
+    if (this.state.dataForMapGottenRegion.length > 0) {
+      for (let dataFromRegionArray of this.state.dataForMapGottenRegion[0].data) {
+        // console.log(dataFromRegionArray);
+        if (dataFromRegionArray.areaName == feature.properties.rgn19nm) {
+          gottenFeature = dataFromRegionArray.areaName
+          gottenFeatureNumber = dataFromRegionArray.cumCasesBySpecimenDate
+          break;
+        }
+      }
+    }
+  }
+
+  console.log(gottenFeatureNumber);
     e.target.setStyle({
       fillColor: this.getColor(gottenFeatureNumber),
       weight: 3,
@@ -266,10 +344,13 @@ class App extends Component {
     });
 
     e.target.closePopup();
-  }
+
+}
 
   zoomToFeature(e) {
     this.myMapRef.current.leafletElement.fitBounds(e.target.getBounds())
+
+    this.clickedPlace(e);
     // Maps.fitBounds(e.target.getBounds());
     // this.refs.leafletElement.map.
   }
@@ -279,7 +360,7 @@ class App extends Component {
   createClusterCustomIcon(cluster) {
     var markers = cluster.getAllChildMarkers();
     var n = 0;
-    console.log(markers);
+    // console.log(markers);
     for (var i = 0; i < markers.length; i++) {
       // Adds the number passed to it in the props (params)
       n += markers[i].options.number;
@@ -291,7 +372,7 @@ class App extends Component {
   createClusterCustomIcon2(cluster) {
     var markers = cluster.getAllChildMarkers();
     var n = 0;
-    console.log(markers);
+    // console.log(markers);
     // for (var i = 0; i < markers.length; i++) {
     //   // Adds the number passed to it in the props (params)
     //   n += markers[i].number;
@@ -306,7 +387,7 @@ class App extends Component {
   // }
 
   handleAreaName = (langValue) => {
-    console.log('handleAreaName');
+    // console.log('handleAreaName');
     this.setState({
       areaName: langValue,
     });
@@ -322,7 +403,7 @@ class App extends Component {
   // }
 
   updateSearch(event) {
-    console.log(event.target.value);
+    // console.log(event.target.value);
 
     // Limit to 20 characters in the search box
     this.setState({
@@ -331,16 +412,24 @@ class App extends Component {
 
   }
 
+  checkBoundaryDisplayType() {
+    if (this.state.areaType == 'overview' || this.state.areaType == 'nation') {
+      return 'United Kingdom and Nations view'
+    } else if (this.state.areaType == 'region') {
+      return 'Regions view'
+    }
+  }
+
   updateMapBorders() {
     this.setState({
       loadedBorderInfo: 1
     });
-    console.log(this.state.dataForMapGottenNation);
+    // console.log(this.state.dataForMapGottenNation);
   }
 
   showOnMap() {
     this.loadPointsOnMap();
-    console.log(this.state.dataForMapGottenRegion);
+    // console.log(this.state.dataForMapGottenRegion);
   }
 
   displayTextBox() {
@@ -367,28 +456,37 @@ class App extends Component {
   }
 
   clickedPlace(event) {
-    const gottenPlaceTarget = event.currentTarget.innerHTML;
-    // const gottenPlaceTargetInner = gottenPlaceTarget.innerHTML;
+    // gottenPlaceTarget.innerHTML;
+    let gottenPlaceTarget = ""
+    console.log(event);
+    if (event.sourceTarget != null) {
+      gottenPlaceTarget = event.sourceTarget.feature.properties.ctry19nm
+    } else if (event.currentTarget) {
+      gottenPlaceTarget = event.currentTarget.innerHTML;
+      console.log(gottenPlaceTarget);
+    }
+
     console.log(gottenPlaceTarget);
+
 
     const urlToData = 'https://nominatim.openstreetmap.org/search?q=' + gottenPlaceTarget + ',%20United%20Kingdom';
     // Need to give the format of it too
     const formatForDataOutput = '&format=json';
 
-    console.log(urlToData);
+    // console.log(urlToData);
 
     fetch(urlToData + formatForDataOutput).then(res => res.json()).then(data => {
 
       this.setState({
         dataGottenBackFromAPI: [],
       }, () => {
-        console.log("cleared");
+        // console.log("cleared");
       })
 
 
       var joined = this.state.dataGottenBackFromAPI.concat(data[0]);
 
-      console.log(joined);
+      // console.log(joined);
 
       let valueOfZoom = 6;
 
@@ -403,28 +501,36 @@ class App extends Component {
         // if (this.state.dataForSearch.some(dataSearching => input.toLowerCase().includes )) (words.some(word => input.toLowerCase().includes(word.toLowerCase()));
 
         if (gottenPlaceTarget.trim().includes('United Kingdom')) {
-          console.log("first");
+          // console.log("first");
           areatypegiven = 'overview'
         } else if (this.state.dataForSearch.includes(gottenPlaceTarget.trim())) {
-          console.log("nation");
+          // console.log("nation");
           areatypegiven = 'nation'
+          valueOfZoom = 5
         } else if (this.state.dataForSearchRegion.includes(gottenPlaceTarget.trim())) {
-          console.log("region");
+          // console.log("region");
           areatypegiven = 'region'
+          valueOfZoom = 7
+
+        } else if (this.state.dataForSearchUTLA.includes(gottenPlaceTarget.trim())) {
+          // console.log("region");
+          areatypegiven = 'utla'
+          valueOfZoom = 7
+
         }
 
-        console.log(this.state.areaName.trim());
+        // console.log(this.state.areaName.trim());
 
-        console.log(this.state.dataForSearchRegion);
-        console.log(gottenPlaceTarget.trim());
+        // console.log(this.state.dataForSearchRegion);
+        // console.log(gottenPlaceTarget.trim());
 
         if (this.state.dataForSearchRegion.includes('North East')) {
-          console.log(128391203812);
+          // console.log(128391203812);
         }
 
-        console.log(gottenPlaceTarget);
+        // console.log(gottenPlaceTarget);
 
-        console.log(areatypegiven);
+        // console.log(areatypegiven);
 
         this.setState({
           dataGottenBackFromAPI: joined,
@@ -434,10 +540,11 @@ class App extends Component {
           areaName: gottenPlaceTarget,
           areaType: areatypegiven
         }, () => {
-          console.log(this.state);
+          // console.log(this.state);
+          this.getGeoJSONAppear();
         })
 
-        console.log(this.state.areaName.trim());
+        // console.log(this.state.areaName.trim());
 
       }
 
@@ -446,7 +553,7 @@ class App extends Component {
     });
 
     this.getPopulationDetails();
-    console.log(this);
+    // console.log(this);
   }
 
 
@@ -454,10 +561,10 @@ class App extends Component {
   clickedSchoolSelectionText(event) {
     const gottenPlaceTarget = event.currentTarget.innerHTML;
     // const gottenPlaceTargetInner = gottenPlaceTarget.innerHTML;
-    console.log(gottenPlaceTarget);
+    // console.log(gottenPlaceTarget);
 
     var gottenSelection = this.state.showSchoolsOnMap;
-    console.log(gottenSelection);
+    // console.log(gottenSelection);
 
     if (gottenSelection == false) {
       this.setState({
@@ -469,7 +576,7 @@ class App extends Component {
         });
     }
 
-    console.log(this.state.showSchoolsOnMap);
+    // console.log(this.state.showSchoolsOnMap);
   }
 
 
@@ -484,7 +591,7 @@ class App extends Component {
 
 
   chosenFromDropdown(event) {
-    console.log(event);
+    // console.log(event);
     this.setState({
       chosenFromDropdownArray: event.target.value
     })
@@ -493,7 +600,7 @@ class App extends Component {
 
   handleChange(event) {
     const name = event.target.value;
-    console.log(name);
+    // console.log(name);
     this.setState({
       chosenFromDropdownArray: name,
     });
@@ -502,7 +609,7 @@ class App extends Component {
 
   onEachFeature(feature, layer) {
     // console.log(f);
-    console.log(feature);
+    // console.log(feature);
     layer.on({
       mouseover: this.highlightFeature.bind(this),
       mouseout: this.resetHighlight.bind(this),
@@ -517,7 +624,7 @@ class App extends Component {
 
   getPopulationDetails() {
     var areatypegiven = ""
-    console.log(this.state.areaName);
+    // console.log(this.state.areaName);
     if (this.state.areaName == 'United Kingdom') {
       areatypegiven = 'overview'
     } else if (this.state.areaName.includes(this.state.dataForSearch)) {
@@ -525,13 +632,13 @@ class App extends Component {
     } else if (this.state.areaName.includes(this.state.dataForSearchRegion)) {
       areatypegiven = 'region'
     }
-    console.log(areatypegiven);
+    // console.log(areatypegiven);
     var getURL = 'http://localhost:5000/apic/getdetailsofarea?areanamegiven=' + this.state.areaName.trim();
     var getURL = 'http://localhost:5000/apic/getdetailsofarea?areanamegiven=' + this.state.areaName.trim();
-    console.log(getURL);
+    // console.log(getURL);
     fetch(getURL).then(res => res.json()).then(data => {
       var qcget = data
-      console.log(qcget);
+      // console.log(qcget);
       var mss = []
       mss.push(qcget)
       return mss
@@ -545,8 +652,8 @@ class App extends Component {
       this.setState({
         areaDetailsForOverview: mss,
       })
-      console.log(mss);
-      console.log(this.state.areaDetailsForOverview);
+      // console.log(mss);
+      // console.log(this.state.areaDetailsForOverview);
     } else {
       console.log("area not available yet");
     }
@@ -567,11 +674,11 @@ class App extends Component {
 
 
 
-    console.log(urlGotten);
+    // console.log(urlGotten);
 
     fetch(urlGotten).then(res => res.json()).then(data => {
       var joined = this.state.dataGottenBackPlaces.concat(data)
-      console.log(data);
+      // console.log(data);
 
     }).then( joined => {
       this.setState({
@@ -584,7 +691,7 @@ class App extends Component {
 
     fetch(urlGotten2).then(res => res.json()).then(data => {
       var joined = this.state.dataForMapGottenNation.concat(data)
-      console.log(data.data);
+      // console.log(data.data);
       return joined;
     }).then( joined => {
       this.setState({
@@ -599,18 +706,18 @@ class App extends Component {
 
     fetch(urlGotten3).then(res => res.json()).then(data => {
       data.data.forEach((a) => {
-        console.log(a);
+        // console.log(a);
       })
-      console.log(data);
+      // console.log(data);
       var joined = this.state.dataForMapGottenRegion.concat(data)
-      console.log(data.data);
+      // console.log(data.data);
       return joined;
     }).then( joined => {
       this.setState({
         dataForMapGottenRegion: joined,
       })
     }).then( () => {
-      this.showOnMap();
+      this.updateMapBorders();
     })
 
 
@@ -640,11 +747,11 @@ class App extends Component {
 
   checkIfSchoolsTextHasBeenSelected() {
     if (this.state.showSchoolsOnMap == false) {
-      console.log(this.state.showSchoolsOnMap);
+      // console.log(this.state.showSchoolsOnMap);
       return "View schools on the map";
     }
     else if (this.state.showSchoolsOnMap == true) {
-      console.log(this.state.showSchoolsOnMap);
+      // console.log(this.state.showSchoolsOnMap);
       return "Hide schools on the map";
     }
   }
@@ -681,7 +788,7 @@ class App extends Component {
 
   render() {
 
-    let filteredSearchPlaces = this.state.dataForSearch.concat(this.state.dataForSearchRegion).filter(
+    let filteredSearchPlaces = this.state.dataForSearch.concat(this.state.dataForSearchRegion).concat(this.state.dataForSearchUTLA).filter(
       (place) => {
         return place.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
       }
@@ -689,7 +796,7 @@ class App extends Component {
 
     function handleLangChange(e) {
       var lang = e.target.value;
-      console.log('done');
+      // console.log('done');
     }
 
     const position = [this.state.lat, this.state.lng]
@@ -711,11 +818,17 @@ class App extends Component {
                 </p>
                 </div>
               {this.displayTextBox()}
-
+              <Paper style={{maxHeight: 600, overflow: 'auto'}}>
               {filteredSearchPlaces.map((place, i)=> {
+                if (place == 'United Kingdom') {
+                  return <li style={{cursor: 'pointer'}} onClick={this.clickedPlace.bind(this)} key={i}> {place} </li>;
+                }
                 return <li style={{cursor: 'pointer'}} onClick={this.clickedPlace.bind(this)} key={i}> {place} </li>;
                 })}
+                </Paper>
               </div>
+
+
 
 
             </Grid>
@@ -753,7 +866,8 @@ class App extends Component {
 
               {/* <MappedClassOf areaName={this.state.areaName} onSelectLanguage={this.handleLanguage} dataGottenBackFromAPI={this.state.dataGottenBackFromAPI} /> */}
 
-              Display:
+              Display: {this.checkBoundaryDisplayType()}
+
               <Maps className="markercluster-map" center={[this.state.latOfArea, this.state.lonOfArea]} zoom={this.state.valueOfZoom} maxZoom={18} ref={this.myMapRef}>
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -988,9 +1102,11 @@ class App extends Component {
 
 
                   {/* // <GeoJSON data={this.getGeoJSONNew()} style={this.getStyle(1, 2)} /> */}
-                  <GeoJSON data={this.getGeoJSONNew()} style={this.style} onEachFeature={this.onEachFeature.bind(this)} ref="geojson">
 
-                  </GeoJSON>
+                  {this.getGeoJSONAppear()}
+
+
+
 
 
 

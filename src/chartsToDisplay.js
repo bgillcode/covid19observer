@@ -71,7 +71,7 @@ export default class LineChart extends Component {
   chartRef6 = React.createRef();
 
   runAllCharts() {
-    console.log("test");
+    // console.log("test");
     this.setState({
       dataGottenBack: [],
       getDataForChart: "",
@@ -80,8 +80,8 @@ export default class LineChart extends Component {
     if (this.state.areaName == 'United Kingdom' || this.state.areaName == 'England' || this.state.areaName == "" || this.state.areaType == 'nation' || this.state.areaType == "overview") {
 
       if (this.state.ifOverview) {
-        var baseURL = 'http://localhost:5000'
-        var apiName = 'apic'
+        var baseURL = 'http://localhost:5000/'
+        var apiName = 'apic/'
         var getRoute = 'getoverview'
         var getFieldForRoute1 = 'areatype'
         var getFieldForRoute2 = ''
@@ -91,8 +91,8 @@ export default class LineChart extends Component {
           getFieldForRoute2 = 'areaname'
         }
 
-        var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-        console.log(urlGotten);
+        var urlGotten = baseURL + apiName + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+        // console.log(urlGotten);
         fetch(urlGotten).then(res => res.json()).then(data => {
           var joined = this.state.dataGottenBack.concat(data)
           // var dataToAdd = data;
@@ -110,13 +110,13 @@ export default class LineChart extends Component {
         this.setState({
           getDataForChart: "no",
         })
-        var baseURL = 'http://localhost:5000'
-        var apiName = 'apic'
+        var baseURL = 'http://localhost:5000/'
+        var apiName = 'apic/'
         var getRoute = 'getoverview'
         var getFieldForRoute1 = 'areatype'
         var getFieldForRoute2 = 'areanamegiven'
-        var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-        console.log(urlGotten);
+        var urlGotten = baseURL + apiName + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+        // console.log(urlGotten);
         fetch(baseURL).then(res => res.json()).then(data => {
           var joined = this.state.dataGottenBack.concat(data)
           // var dataToAdd = data;
@@ -132,8 +132,8 @@ export default class LineChart extends Component {
         });
       }
 
-      var baseURL2 = 'http://localhost:5000'
-      var apiName = 'apic'
+      var baseURL2 = 'http://localhost:5000/'
+      var apiName = 'apic/'
       var getRoute = 'getoverview'
       var getFieldForRoute1 = 'areatype'
       var getFieldForRoute2 = ''
@@ -142,10 +142,10 @@ export default class LineChart extends Component {
       } else {
         getFieldForRoute2 = 'areaname'
       }
-      var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-      console.log(urlGotten);
+      var urlGotten = baseURL + apiName + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+      // console.log(urlGotten);
 
-      console.log();
+      // console.log();
 
       fetch(urlGotten).then(res => res.json()).then(data => {
         var joined = this.state.dataGottenBack.concat(data)
@@ -155,6 +155,7 @@ export default class LineChart extends Component {
           dataGottenBack: joined,
 
         }, () => {
+          console.log(this);
           this.updateLineChart1();
           this.updateLineChart2();
         })
@@ -166,8 +167,8 @@ export default class LineChart extends Component {
 
 
 
-      var baseURL2 = 'http://localhost:5000'
-      var apiName = 'apic'
+      var baseURL2 = 'http://localhost:5000/'
+      var apiName = 'apic/'
       var getRoute = 'getoverview'
       var getFieldForRoute1 = 'areatype'
       // if (this.state.areaType !== 'overview') {
@@ -181,7 +182,7 @@ export default class LineChart extends Component {
         var joined = this.state.dataGottenBackAges.concat(data)
         // var dataToAdd = data;
 
-        console.log(joined);
+        // console.log(joined);
 
         this.setState({
           dataGottenBackAges: joined,
@@ -197,8 +198,8 @@ export default class LineChart extends Component {
     } else if (this.state.areaType == 'region') {
 
         if (this.state.ifOverview) {
-          var baseURL = 'http://localhost:5000'
-          var apiName = 'apic'
+          var baseURL = 'http://localhost:5000/'
+          var apiName = 'apic/'
           var getRoute = 'getoverview'
           var getFieldForRoute1 = 'areatype'
           var getFieldForRoute2 = ''
@@ -208,8 +209,8 @@ export default class LineChart extends Component {
             getFieldForRoute2 = 'areaname'
           }
 
-          var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-          console.log(urlGotten);
+          var urlGotten = baseURL + apiName + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+          // console.log(urlGotten);
           fetch(urlGotten).then(res => res.json()).then(data => {
             var joined = this.state.dataGottenBack.concat(data)
             // var dataToAdd = data;
@@ -227,13 +228,13 @@ export default class LineChart extends Component {
           this.setState({
             getDataForChart: "no",
           })
-          var baseURL = 'http://localhost:5000'
-          var apiName = 'apic'
+          var baseURL = 'http://localhost:5000/'
+          var apiName = 'apic/'
           var getRoute = 'getoverview'
           var getFieldForRoute1 = 'areatype'
           var getFieldForRoute2 = 'areanamegiven'
-          var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-          console.log(urlGotten);
+          var urlGotten = baseURL + apiName + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+          // console.log(urlGotten);
           fetch(baseURL).then(res => res.json()).then(data => {
             var joined = this.state.dataGottenBack.concat(data)
             // var dataToAdd = data;
@@ -268,13 +269,13 @@ export default class LineChart extends Component {
     if (this.state.areaName == 'United Kingdom' || this.state.areaName == 'England' || this.state.areaName == "" || this.state.areaType == 'nation' || this.state.areaType == 'overview' || this.props.areaType == 'overview') {
 
       if (this.state.ifOverview) {
-        var baseURL = 'http://localhost:5000'
-        var apiName = 'apic'
+        var baseURL = 'http://localhost:5000/'
+        var apiName = 'apic/'
         var getRoute = 'getoverview'
         var getFieldForRoute1 = 'areatype'
         var getFieldForRoute2 = 'areaname'
-        var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-        console.log(urlGotten);
+        var urlGotten = baseURL + apiName + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+        // console.log(urlGotten);
         fetch(urlGotten).then(res => res.json()).then(data => {
           var joined = this.state.dataGottenBack.concat(data)
           // var dataToAdd = data;
@@ -298,7 +299,7 @@ export default class LineChart extends Component {
         var getFieldForRoute1 = 'areatype'
         var getFieldForRoute2 = 'areanamegiven'
         var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-        console.log(urlGotten);
+        // console.log(urlGotten);
         fetch(baseURL).then(res => res.json()).then(data => {
           var joined = this.state.dataGottenBack.concat(data)
           // var dataToAdd = data;
@@ -324,9 +325,9 @@ export default class LineChart extends Component {
       var getFieldForRoute2 = 'areaname'
       // }
       var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-      console.log(urlGotten);
+      // console.log(urlGotten);
 
-      console.log();
+      // console.log();
 
       fetch(urlGotten).then(res => res.json()).then(data => {
         var joined = this.state.dataGottenBack.concat(data)
@@ -336,6 +337,7 @@ export default class LineChart extends Component {
           dataGottenBack: joined,
 
         }, () => {
+          console.log(this);
           this.updateLineChart1();
           this.updateLineChart2();
         })
@@ -359,7 +361,7 @@ export default class LineChart extends Component {
         var joined = this.state.dataGottenBackAges.concat(data)
         // var dataToAdd = data;
 
-        console.log(joined);
+        // console.log(joined);
 
         this.setState({
           dataGottenBackAges: joined,
@@ -388,7 +390,7 @@ export default class LineChart extends Component {
           }
 
           var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-          console.log(urlGotten);
+          // console.log(urlGotten);
           fetch(urlGotten).then(res => res.json()).then(data => {
             var joined = this.state.dataGottenBack.concat(data)
             // var dataToAdd = data;
@@ -412,7 +414,7 @@ export default class LineChart extends Component {
           var getFieldForRoute1 = 'areatype'
           var getFieldForRoute2 = 'areanamegiven'
           var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-          console.log(urlGotten);
+          // console.log(urlGotten);
           fetch(baseURL).then(res => res.json()).then(data => {
             var joined = this.state.dataGottenBack.concat(data)
             // var dataToAdd = data;
@@ -436,7 +438,7 @@ export default class LineChart extends Component {
   componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):
     if (this.props.areaName !== prevProps.areaName) {
-      console.log(23423942);
+      // console.log(23423942);
       if (this.props.areaName.trim() !== 'United Kingdom') {
         this.setState({
           areaName: this.props.areaName.trim(),
@@ -481,8 +483,8 @@ export default class LineChart extends Component {
 
 
   getAndDisplayCOVIDInformation() {
-    console.log(123456);
-    console.log(this.state.dataGottenBack[0]);
+    // console.log(123456);
+    // console.log(this.state.dataGottenBack[0]);
     var gottenCumulativeAdmissions = 0;
     if (this.state.dataGottenBack[0]) {
 
@@ -514,6 +516,12 @@ export default class LineChart extends Component {
                 </div>
               <div>
                 Cumulative Admissions to Hospital for {this.state.areaName}: {this.state.dataGottenBack[0].data[3].cumAdmissions} {"\n"}
+                <div> 
+                  New deaths for {this.state.areaName}: {this.state.dataGottenBack[0].data[3].newDeathsByPublishDate} {"\n"}
+                  </div>
+                  <div>
+                    Cumulative deaths for {this.state.areaName}: {this.state.dataGottenBack[0].data[3].cumDeathsByPublishDate} {"\n"}
+                    </div>
                 </div>
               </div>
           );
@@ -527,6 +535,12 @@ export default class LineChart extends Component {
                 New Cases for {this.state.areaName}: {this.state.dataGottenBack[0].data[0].newCasesBySpecimenDate} {"\n"}
               <div>
                 Cumulative Cases for {this.state.areaName}: {this.state.dataGottenBack[0].data[0].cumCasesBySpecimenDate} {"\n"}
+                <div>
+                  New deaths for {this.state.areaName}: {this.state.dataGottenBack[0].data[0].newDeathsByPublishDate} {"\n"}
+                  </div>
+                  <div>
+                    Cumulative deaths for {this.state.areaName}: {this.state.dataGottenBack[0].data[0].cumDeathsByPublishDate} {"\n"}
+                    </div>
                 </div>
               </div>
           );
@@ -547,10 +561,10 @@ export default class LineChart extends Component {
 
 
   updateLineChart0 = () => {
-    console.log(12345);
-    console.log(this);
+    // console.log(12345);
+    // console.log(this);
 
-    console.log(this.state);
+    // console.log(this.state);
 
     const myChartRef0 = this.chartRef0.current.getContext("2d");
 
@@ -565,6 +579,10 @@ export default class LineChart extends Component {
 
     if (this.state.areaType == 'region') {
 
+      console.log(this.state.areaType);
+
+      console.log(this.state.dataGottenBack)
+
 
 
 
@@ -572,7 +590,7 @@ export default class LineChart extends Component {
       if (this.state.ifOverview) {
 
         if (this.state.ifCases) {
-          console.log(this.state);
+          // console.log(this.state);
 
           var myChart0 = new Chart(myChartRef0, {
             type: "line",
@@ -611,7 +629,7 @@ export default class LineChart extends Component {
       if (this.state.ifOverview) {
 
         if (this.state.ifCases) {
-          console.log(this.state);
+          // console.log(this.state);
 
           var myChart0 = new Chart(myChartRef0, {
             type: "line",
@@ -651,10 +669,17 @@ export default class LineChart extends Component {
 
 
     updateLineChart1 = () => {
+      console.log(this);
 
-      console.log(this.state);
+      if (this.state.dataGottenBack.length > 1) {
+
+
+
+      // console.log(this.state);
 
       const myChartRef1 = this.chartRef1.current.getContext("2d");
+
+
 
       var myChart1 = new Chart(myChartRef1, {
         type: "line",
@@ -682,8 +707,12 @@ export default class LineChart extends Component {
         });
       }
 
+      }
+
 
       updateLineChart2 = () => {
+
+        if (this.state.dataGottenBack.length > 1) {
 
         const transformedData = this.state.dataGottenBack[0].data.map(obj=>{
           return {
@@ -700,9 +729,9 @@ export default class LineChart extends Component {
         })
 
 
-        console.log(transformedData)
+        // console.log(transformedData)
 
-        console.log(this.state);
+        // console.log(this.state);
 
         const myChartRef2 = this.chartRef2.current.getContext("2d");
 
@@ -754,20 +783,24 @@ export default class LineChart extends Component {
         });
       }
 
+    }
+
 
 
 
 
       updateAgeChart = () => {
 
+        if (this.state.dataGottenBackAges.length > 0) {
+
         if (this.state.areaName == 'United Kingdom' || this.state.areaName == 'England' || this.state.areaName == "") {
-          console.log(this.state);
+          // console.log(this.state);
 
           const myDoughnutChartRef1 = this.myDoughnutChartRef1.current.getContext("2d");
 
-          console.log(this.state.dataGottenBackAges[0].data[0].cumAdmissionsByAge);
-          console.log(this.state.dataGottenBackAges[0].data[0].cumAdmissionsByAge[0].value);
-          console.log(this.state.dataGottenBackAges[0].data[0].cumAdmissionsByAge[1].value);
+          // console.log(this.state.dataGottenBackAges[0].data[0].cumAdmissionsByAge);
+          // console.log(this.state.dataGottenBackAges[0].data[0].cumAdmissionsByAge[0].value);
+          // console.log(this.state.dataGottenBackAges[0].data[0].cumAdmissionsByAge[1].value);
           var qssc = [
             this.state.dataGottenBackAges[0].data[0].cumAdmissionsByAge[0].value,
             this.state.dataGottenBackAges[0].data[0].cumAdmissionsByAge[1].value,
@@ -776,7 +809,7 @@ export default class LineChart extends Component {
             this.state.dataGottenBackAges[0].data[0].cumAdmissionsByAge[4].value,
           ];
 
-          console.log(qssc);
+          // console.log(qssc);
 
           var myDoughnutChart = new Chart(myDoughnutChartRef1, {
             type: "doughnut",
@@ -819,6 +852,7 @@ export default class LineChart extends Component {
 
 
       }
+    }
 
       doughnutChartShow() {
         if (this.state.areaName == 'United Kingdom' || this.state.areaName == 'England' || this.state.areaName == "") {
@@ -847,7 +881,7 @@ export default class LineChart extends Component {
 
 
       lineChartShow() {
-        console.log(this.state.areaType);
+        // console.log(this.state.areaType);
         if (this.state.areaName == 'United Kingdom' || this.state.areaName == 'England' || this.state.areaName == "" || this.state.areaType == 'nation' || this.state.areaType == 'overview') {
           return (<div>          <Card>
             <CardHeader
@@ -938,7 +972,7 @@ export default class LineChart extends Component {
 
       render() {
         const { data, labels } = this.state;
-        console.log(this.state);
+        // console.log(this.state);
 
         return (
           <div >
