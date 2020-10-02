@@ -25,11 +25,10 @@ export default class LineChartForecasting extends Component {
       dataGottenBack : [],
       getDataForChart: "",
       areaType: "overview",
-      areaName: "",
+      areaName: "United Kingdom",
 
-      chart0Title: "Daily Cases:",
-      chart1Title: "Patients in ventilation beds:",
-      chart2Title: "Comparison of: Daily Cases and Patients in ventilation beds:",
+      chart0Title: "Forecast data for daily cases with LSTM and Prophet models:",
+      chart2Title: "Comparison of actual data with forecast data for daily cases with LSTM and Prophet models",
 
       ifOverview: true,
 
@@ -38,6 +37,8 @@ export default class LineChartForecasting extends Component {
       ifDeaths: false,
       ifTesting: false,
       ifHospital: false,
+      myChart0: {},
+      myChart2: {},
 
     }
 
@@ -52,6 +53,8 @@ export default class LineChartForecasting extends Component {
   // Chart 2
   chartRef2 = React.createRef();
 
+  mychart0;
+
   runAllCharts() {
     console.log("test");
     this.setState({
@@ -60,19 +63,17 @@ export default class LineChartForecasting extends Component {
 
     });
 
-    if (this.state.ifOverview) {
-      var baseURL = 'http://localhost:5000'
-      var apiName = 'apic'
-      var getRoute = 'getoverview'
-      var getFieldForRoute1 = 'areatype'
-      var getFieldForRoute2 = ''
-      if (this.state.areaName !== "United Kingdom") {
-        getFieldForRoute2 = 'areanamegiven'
-      } else {
-        getFieldForRoute2 = 'areaname'
-      }
+    // if (this.state.ifOverview) {
+    var baseURL = 'http://localhost:5000/'
+    var apiName = 'apic/'
+    var getRoute = 'getforecastinginformation'
+    var getFieldForRoute1 = 'areatypegiven'
+    var getFieldForRoute2 = ''
 
-      var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+    getFieldForRoute2 = 'areanamegiven'
+
+
+    var urlGotten = baseURL + apiName + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName + "&model=lstm"
       console.log(urlGotten);
       fetch(urlGotten).then(res => res.json()).then(data => {
         var joined = this.state.dataGottenBack.concat(data)
@@ -83,64 +84,50 @@ export default class LineChartForecasting extends Component {
           getDataForChart: this.props.getDataForChart,
 
         }, () => {
-          this.updateLineChart0();
+          // this.updateLineChart0();
         })
 
       });
-    } else {
-      this.setState({
-        getDataForChart: "no",
-      })
-      var baseURL = 'http://localhost:5000'
-      var apiName = 'apic'
-      var getRoute = 'getoverview'
-      var getFieldForRoute1 = 'areatype'
-      var getFieldForRoute2 = 'areanamegiven'
-      var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-      console.log(urlGotten);
-      fetch(baseURL).then(res => res.json()).then(data => {
-        var joined = this.state.dataGottenBack.concat(data)
-        // var dataToAdd = data;
 
-        this.setState({
-          dataGottenBack: joined,
-          getDataForChart: this.props.getDataForChart,
 
-        }, () => {
+      var urlGotten = baseURL + apiName + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName + "&model=prophet"
+        console.log(urlGotten);
+        fetch(urlGotten).then(res => res.json()).then(data => {
+          var joined = this.state.dataGottenBack.concat(data)
+          // var dataToAdd = data;
+          console.log(joined);
+          this.setState({
+            dataGottenBack: joined,
+            getDataForChart: this.props.getDataForChart,
+
+          }, () => {
+
+            // this.updateLineChart0();
+          })
+
+        });
+
+
+        var baseURL = 'http://localhost:5000/'
+        var apiName = 'apic/'
+        var getRoute = 'getoverview'
+        var getFieldForRoute1 = 'areatype'
+        var getFieldForRoute2 = 'areaname '
+        var urlGotten = baseURL + apiName + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+        console.log(urlGotten);
+        fetch(urlGotten).then(res => res.json()).then(data => {
+          var joined = this.state.dataGottenBack.concat(data)
+          // var dataToAdd = data;
+          return joined;
+        }).then( joined => {
+          this.setState({
+            dataGottenBack: joined,
+          })
+        }).then( () => {
           this.updateLineChart0();
+          this.updateLineChart2();
         })
 
-      });
-    }
-
-    var baseURL2 = 'http://localhost:5000'
-    var apiName = 'apic'
-    var getRoute = 'getoverview'
-    var getFieldForRoute1 = 'areatype'
-    var getFieldForRoute2 = ''
-    if (this.state.areaName !== "United Kingdom") {
-      getFieldForRoute2 = 'areanamegiven'
-    } else {
-      getFieldForRoute2 = 'areaname'
-    }
-    var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-    console.log(urlGotten);
-
-    console.log();
-
-    fetch(urlGotten).then(res => res.json()).then(data => {
-      var joined = this.state.dataGottenBack.concat(data)
-      // var dataToAdd = data;
-
-      this.setState({
-        dataGottenBack: joined,
-
-      }, () => {
-        this.updateLineChart1();
-        this.updateLineChart2();
-      })
-
-    });
   }
 
   // Get the data and then run the update for the chart to be displayed for each one
@@ -153,106 +140,93 @@ export default class LineChartForecasting extends Component {
       ifDeaths: this.props.ifDeaths,
       ifTesting: this.props.ifTesting,
       ifHospital: this.props.ifHospital,
-      // chart0Title: this.props.chart0Title,
-      // chart1Title: this.props.chart1Title,
-      // chart2Title: this.props.chart2Title,
     })
 
-    if (this.state.ifOverview) {
-      var baseURL = 'http://localhost:5000'
-      var apiName = 'apic'
-      var getRoute = 'getoverview'
-      var getFieldForRoute1 = 'areatype'
-      var getFieldForRoute2 = 'areaname'
-      var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+    // if (this.state.ifOverview) {
+    var baseURL = 'http://localhost:5000/'
+    var apiName = 'apic/'
+    var getRoute = 'getforecastinginformation'
+    var getFieldForRoute1 = 'areatypegiven'
+    var getFieldForRoute2 = ''
+    // if (this.state.areaName !== "United Kingdom") {
+    getFieldForRoute2 = 'areanamegiven'
+    // } else {
+    //   getFieldForRoute2 = 'areanamegiven'
+    // }
+
+    var urlGotten = baseURL + apiName + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName + "&model=lstm"
       console.log(urlGotten);
       fetch(urlGotten).then(res => res.json()).then(data => {
         var joined = this.state.dataGottenBack.concat(data)
         // var dataToAdd = data;
-
+        console.log(joined);
         this.setState({
           dataGottenBack: joined,
           getDataForChart: this.props.getDataForChart,
 
         }, () => {
-          this.updateLineChart0();
+
+          // this.updateLineChart0();
         })
 
       });
-    } else {
-      this.setState({
-        getDataForChart: "no",
-      })
-      var baseURL = 'http://localhost:5000'
-      var apiName = 'apic'
-      var getRoute = 'getoverview'
-      var getFieldForRoute1 = 'areatype'
-      var getFieldForRoute2 = 'areanamegiven'
-      var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-      console.log(urlGotten);
-      fetch(baseURL).then(res => res.json()).then(data => {
-        var joined = this.state.dataGottenBack.concat(data)
-        // var dataToAdd = data;
 
-        this.setState({
-          dataGottenBack: joined,
-          getDataForChart: this.props.getDataForChart,
 
-        }, () => {
+      var urlGotten = baseURL + apiName + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName + "&model=prophet"
+        console.log(urlGotten);
+        fetch(urlGotten).then(res => res.json()).then(data => {
+          var joined = this.state.dataGottenBack.concat(data)
+          // var dataToAdd = data;
+          console.log(joined);
+          this.setState({
+            dataGottenBack: joined,
+            getDataForChart: this.props.getDataForChart,
+
+          }, () => {
+
+            // this.updateLineChart0();
+          })
+
+        });
+
+
+        var baseURL = 'http://localhost:5000/'
+        var apiName = 'apic/'
+        var getRoute = 'getoverview'
+        var getFieldForRoute1 = 'areatype'
+        var getFieldForRoute2 = 'areaname '
+        var urlGotten = baseURL + apiName + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
+        console.log(urlGotten);
+        fetch(urlGotten).then(res => res.json()).then(data => {
+          var joined = this.state.dataGottenBack.concat(data)
+          // var dataToAdd = data;
+          return joined;
+        }).then( joined => {
+          this.setState({
+            dataGottenBack: joined,
+          })
+        }).then( () => {
           this.updateLineChart0();
+          this.updateLineChart2();
         })
 
-      });
     }
 
-    var baseURL2 = 'http://localhost:5000'
-    var apiName = 'apic'
-    var getRoute = 'getoverview'
-    var getFieldForRoute1 = 'areatype'
-    // if (this.state.areaType !== 'overview') {
-    // var getFieldForRoute2 = 'areanamegiven'
-  // } else {
-    var getFieldForRoute2 = 'areaname'
-  // }
-    var urlGotten = baseURL + '/' + apiName + '/' + getRoute + '?' + getFieldForRoute1 + '=' + this.state.areaType + '&' + getFieldForRoute2 + '=' + this.state.areaName
-    console.log(urlGotten);
-
-    console.log();
-
-    fetch(urlGotten).then(res => res.json()).then(data => {
-      var joined = this.state.dataGottenBack.concat(data)
-      // var dataToAdd = data;
-
-      this.setState({
-        dataGottenBack: joined,
-
-      }, () => {
-        this.updateLineChart1();
-        this.updateLineChart2();
-      })
-
-    });
-  }
 
 
+    componentDidUpdate(prevProps) {
+      // Typical usage (don't forget to compare props):
+      if (this.props.areaName !== prevProps.areaName) {
+        console.log(23423942);
+        this.setState({
+          areaName: this.props.areaName.trim(),
+          areaType: this.props.areaType,
+        }, () => {
+          this.runAllCharts();
 
-  componentDidUpdate(prevProps) {
-  // Typical usage (don't forget to compare props):
-  if (this.props.areaName !== prevProps.areaName) {
-    console.log(23423942);
-    this.setState({
-        areaName: this.props.areaName.trim(),
-        areaType: this.props.areaType,
-      }, () => {
-        this.runAllCharts();
-      });
-
-
-
-  }
-
-
-}
+        });
+      }
+    }
 
 
   updateLineChart0 = () => {
@@ -268,6 +242,11 @@ export default class LineChartForecasting extends Component {
       if (this.state.ifCases) {
         console.log(this.state);
 
+    // var thisLength = Object.keys(this.state.dataGottenBack[2].data).length
+
+    // console.log(thisLength);
+
+
     var myChart0 = new Chart(myChartRef0, {
       type: "line",
       data: {
@@ -275,10 +254,16 @@ export default class LineChartForecasting extends Component {
         labels: this.state.dataGottenBack[0].data.map(d => d.date).reverse(),
         datasets: [
           {
-            data: this.state.dataGottenBack[0].data.map(d => d.newCasesByPublishDate).reverse(),
-            label: 'Daily Cases: ' + this.state.areaName,
+            data: this.state.dataGottenBack[0].data.map(d => d.new_predicted).reverse(),
+            label: 'Forecasting Daily Cases: ' + 'LSTM model: ' + this.state.areaName,
             borderColor: 'rgba(0, 200, 0, 1)',
-          }]
+          },
+          {
+            data: this.state.dataGottenBack[1].data.map(d => d.new_predicted).reverse(),
+            label: 'Forecasting Daily Cases: ' + 'Prophet model: ' + this.state.areaName,
+            borderColor: 'rgba(0, 100, 52, 1)',
+          }
+        ]
         },
         options: {
           scales: {
@@ -290,6 +275,8 @@ export default class LineChartForecasting extends Component {
         }
       });
 
+    this.setState({myChart0: myChart0});
+
     }
 
     }
@@ -297,109 +284,115 @@ export default class LineChartForecasting extends Component {
 
 
 
-    updateLineChart1 = () => {
 
-      console.log(this.state);
+  updateLineChart2 = () => {
 
-      const myChartRef1 = this.chartRef1.current.getContext("2d");
+    console.log(this.state.dataGottenBack);
 
-      var myChart1 = new Chart(myChartRef1, {
-        type: "line",
-        title: 'COVID-19 patients in ventilation beds: ' + this.state.areaName,
-        data: {
-          //Bring in data
-          labels: this.state.dataGottenBack[1].data.map(d => d.date).reverse(),
-          datasets: [
-            {
-              data: this.state.dataGottenBack[1].data.map(d => d.covidOccupiedMVBeds).reverse(),
-              borderColor: '#F56565',
-              label: 'COVID-19 patients in ventilation beds: ' + this.state.areaName,
-            }]
+    if (this.state.dataGottenBack.length > 2) {
+
+    const transformedData = this.state.dataGottenBack[0].data.map(obj=>{
+      return {
+        x:obj.date,
+        y:obj.new_predicted,
+      }
+    })
+
+    const transformedData2 = this.state.dataGottenBack[1].data.map(obj=>{
+      return {
+        x:obj.date,
+        y:obj.new_predicted,
+      }
+    })
+
+    let transformedData3 = {}
+
+
+    if (this.state.areaType == 'region') {
+    transformedData3 = this.state.dataGottenBack[2].data.map(obj=>{
+      return {
+        x:obj.date,
+        y:obj.newCasesBySpecimenDate,
+      }
+    })
+  } else {
+    transformedData3 = this.state.dataGottenBack[2].data.map(obj=>{
+      return {
+        x:obj.date,
+        y:obj.newCasesByPublishDate,
+      }
+    })
+      }
+
+    console.log(transformedData3);
+
+
+    // console.log(transformedData)
+
+    // console.log(this.state);
+
+    const myChartRef2 = this.chartRef2.current.getContext("2d");
+
+    var myChart2 = new Chart(myChartRef2, {
+      type: "line",
+      data: {
+        //Bring in data
+        labels: this.state.dataGottenBack[0].data.map(d => d.date).reverse(),
+        datasets: [
+          {
+            label: 'Forecasting Daily Cases: ' + 'LSTM model: ' + this.state.areaName,
+            data: transformedData,
+            fill: false,
+            borderColor: 'rgba(0, 200, 0, 1)',
           },
-          options: {
-            title: 'COVID-19 patients in ventilation beds: ' + this.state.areaName,
-            scales: {
-              xAxes: [{
-                type: 'time',
-                distribution: 'series',
-                labelString: 'days'
-              }]
+          {
+            label: 'Forecasting Daily Cases: ' + 'Prophet model: ' + this.state.areaName,
+            data: transformedData2,
+            fill: false,
+            borderColor: 'rgba(150, 50, 48, 1)'
+          },
+          {
+            label: 'Forecasting Daily Cases: ' + 'Actual data: ' + this.state.areaName,
+            data: transformedData3,
+            fill: false,
+            borderColor: 'rgba(48, 80, 20, 0.3)'
+          }
+
+        ]
+      },
+      options: {
+        tooltips: {
+          // mode: 'index',
+          intersect: false,
+        },
+        hover: {
+          // mode: 'nearest',
+          // intersect: true
+        },
+        scales: {
+          yAxes: [{
+            display: true,
+            labelString: "Total",
+            ticks: {
+              beginAtZero:true
             }
-          }
-        });
+          }],
+          // Important to include this
+          xAxes: [{
+            type: 'time',
+            distribution: 'series'
+          }]
+        },
       }
+    });
+
+    this.setState({myChart2: myChart2});
+
+  }
+
+}
 
 
-      updateLineChart2 = () => {
-
-        const transformedData = this.state.dataGottenBack[0].data.map(obj=>{
-          return {
-            x:obj.date,
-            y:obj.newCasesByPublishDate,
-          }
-        })
-
-        const transformedData2 = this.state.dataGottenBack[1].data.map(obj=>{
-          return {
-            x:obj.date,
-            y:obj.covidOccupiedMVBeds,
-          }
-        })
-
-
-        console.log(transformedData)
-
-        console.log(this.state);
-
-        const myChartRef2 = this.chartRef2.current.getContext("2d");
-
-        var myChart2 = new Chart(myChartRef2, {
-          type: "scatter",
-          data: {
-            //Bring in data
-            labels: this.state.dataGottenBack[0].data.map(d => d.date).reverse(),
-            datasets: [
-              {
-                label: 'Daily Cases',
-                data: transformedData,
-                fill: false,
-                borderColor: 'rgba(0, 200, 0, 1)',
-              },
-              {
-                label: 'COVID-19 patients in ventilation beds: ' + this.state.areaName,
-                data: transformedData2,
-                fill: false,
-                borderColor: 'rgba(150, 50, 48, 1)'
-              }
-
-            ]
-          },
-          options: {
-            tooltips: {
-              mode: 'index',
-              intersect: false,
-            },
-            hover: {
-              // mode: 'nearest',
-              // intersect: true
-            },
-            scales: {
-              yAxes: [{
-                display: true,
-                labelString: "Total",
-                ticks: {
-                  beginAtZero:true
-                }
-              }],
-              // Important to include this
-              xAxes: [{
-                type: 'time',
-                distribution: 'series'
-              }]
-            },
-          }
-        });
-      }
 
 
 
@@ -426,26 +419,6 @@ export default class LineChartForecasting extends Component {
           />
           <CardContent>
           <canvas id="myChart0" ref={this.chartRef0} />
-          </CardContent>
-          <CardActions>
-          <IconButton aria-label="settings">
-          <MoreVertIcon />
-          </IconButton>
-          </CardActions>
-          </Card>
-
-
-          <Card>
-          <CardHeader
-          title={this.state.chart1Title}
-          action={
-            <IconButton aria-label="settings">
-            <AspectRatioIcon />
-            </IconButton>
-          }
-          />
-          <CardContent>
-          <canvas id="myChart1" ref={this.chartRef1} />
           </CardContent>
           <CardActions>
           <IconButton aria-label="settings">

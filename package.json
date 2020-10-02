@@ -14,11 +14,13 @@
     "chart.js": "^2.9.3",
     "leaflet": "^1.6.0",
     "leaflet.markercluster": "^1.4.1",
+    "plotly.js": "^1.56.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-geolookup": "^1.1.0",
     "react-leaflet-choropleth": "^2.0.1",
     "react-leaflet-markercluster": "^2.0.0",
+    "react-plotly.js": "^2.5.0",
     "react-scripts": "3.4.1"
   },
   "scripts": {
