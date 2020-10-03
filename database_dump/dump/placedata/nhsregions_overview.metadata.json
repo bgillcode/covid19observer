@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"placedata.nhsregions_overview"}],"uuid":"ec8976ab6d794e4d923c8b9eb2da6a6c"}
