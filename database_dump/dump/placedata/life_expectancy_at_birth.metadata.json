@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"placedata.life_expectancy_at_birth"}],"uuid":"0f2f8773c3bf41e3ac22bc2aed80c9f6"}

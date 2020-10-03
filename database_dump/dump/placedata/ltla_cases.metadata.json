@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"placedata.ltla_cases"}],"uuid":"9c447b4854584bd6a2bfbac32cf9a050"}

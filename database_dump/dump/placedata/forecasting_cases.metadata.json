@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"placedata.forecasting_cases"}],"uuid":"d0c6c4673a764ca69645a403c86fed70"}

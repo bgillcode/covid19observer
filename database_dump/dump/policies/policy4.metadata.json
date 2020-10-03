@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"policies.policy4"}],"uuid":"81c1206ff1234b31a6b7d6a265319b0a"}
