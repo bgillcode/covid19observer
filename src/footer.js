@@ -33,7 +33,7 @@ function Footer({ children }) {
               <div id='site-information' display={{ xs: 'none', sm: 'none', md: 'none' }}>
                 <ul>
                   <p>About</p>
-                  <p>Data sources</p>
+                  <p>Data sources: 'https://www.ons.gov.uk', 'http://coronavirus.gov.uk', 'https://fingertips.phe.org.uk/'</p>
                   <p>Map information</p>
                   <p>News and information</p>
                   <p>COVID-19 Basics</p>
