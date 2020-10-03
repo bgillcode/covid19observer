@@ -896,6 +896,39 @@ def index6():
 
 
 
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+@app.route('/apic/getmostatrisk')
+def index44():
+    # Can switch databases from here
+    dbss = mongo.cx['placedata']
+
+    # Used to store the documents that are returned
+    docs = []
+
+    queryCreated = {}
+
+    print("first")
+    queryCreated = dbss['forecasting_cases'].find({}).sort("new_predicted").limit(1)
+
+    # Get the pymongo query response
+    json_str = dumps(queryCreated, default=json_util.default)
+
+    # Remove the NaN values and change them to null values to have a valid json response
+    mt = json_str.replace('NaN', 'null')
+
+    # Load it as an object
+    record2 = loads(mt)
+
+    # Return it as json
+    response = jsonify(data=record2)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
+
+
+
+
 
 #  This route will be for adding ml data later on
 #
