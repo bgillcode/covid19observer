@@ -51,116 +51,6 @@ mongo = PyMongo(app)
 def index():
     return app.send_static_file('index.html')
 
-# This is an example of what can be done using flask and combining it with machine learning for COVID-19 and weather data
-@cross_origin(origin='*',headers=['Content-Type','Authorization'])
-@app.route('/apic/getmodel')
-def index12():
-    print('okay')
-    areaName = request.args.get('areaname', default = '*', type = str)
-
-    temp = pd.read_csv('history_data_england_temperature.csv')
-    temp_forecast = pd.read_csv('forecast_data_england.csv')
-
-    filename = 'knn-model-united-kingdom-daily.pkl'
-
-    if areaName == 'England':
-        temp = pd.read_csv('history_data_england_temperature.csv')
-        filename = 'knn-model-england-daily.pkl'
-
-    if areaName == 'Scotland':
-        filename = 'knn-model-scotland-daily.pkl'
-
-    if areaName == 'Northern Ireland':
-        filename = 'knn-model-northern-ireland-daily.pkl'
-
-    if areaName == 'Wales':
-        filename = 'knn-model-wales-daily.pkl'
-
-    temp = temp.iloc[:].reset_index().drop('index', axis=1)
-    temp_forecast = temp_forecast.iloc[:].reset_index().drop('index', axis=1)
-
-
-    # Convert to datetime
-    temp['date'] = pd.to_datetime(temp['Date time'])
-    temp_forecast['date'] = pd.to_datetime(temp_forecast['Date time'])
-
-    columns = ['Maximum Temperature', 'Minimum Temperature', 'Temperature',
-    'Wind Chill', 'Precipitation', 'Wind Speed', 'Wind Gust',
-    'Cloud Cover', 'Relative Humidity', 'Conditions', 'date']
-    temp = temp[columns]
-    temp_forecast = temp_forecast[columns]
-
-    df = temp
-
-    # Normalise column names
-    df.rename(columns={'Maximum Temperature':'max_temp', 'Minimum Temperature':'min_temp',
-    'Temperature':'avg_temp', 'Wind Chill':'wind_chill',
-    'Precipitation':'precipitation', 'Wind Speed':'wind_speed',
-    'Wind Gust':'wind_gust', 'Cloud Cover':'cloudiness',
-    'Relative Humidity':'humidity', 'Conditions':'conditions'}, inplace=True)
-
-    # Normalize column names
-    temp_forecast.rename(columns={'Maximum Temperature':'max_temp', 'Minimum Temperature':'min_temp',
-    'Temperature':'avg_temp', 'Wind Chill':'wind_chill',
-    'Precipitation':'precipitation', 'Wind Speed':'wind_speed',
-    'Wind Gust':'wind_gust', 'Cloud Cover':'cloudiness',
-    'Relative Humidity':'humidity', 'Conditions':'conditions'}, inplace=True)
-
-    # Set date as index
-    df = df.set_index('date')
-    temp_forecast = temp_forecast.set_index('date')
-
-    # Organize columns and drop conditions
-    df = df[['avg_temp', 'min_temp',
-    'max_temp', 'humidity', 'cloudiness',
-    'precipitation', 'wind_speed', 'wind_chill',
-    'wind_gust']]
-
-    # Organize columns and drop conditions
-    temp_forecast = temp_forecast[['avg_temp', 'min_temp',
-    'max_temp', 'humidity', 'cloudiness',
-    'precipitation', 'wind_speed', 'wind_chill',
-    'wind_gust']]
-
-    df.dropna(axis=1, inplace=True)
-
-    X = df
-
-    # Load the model based on the area (such as England, Scotland, etc) selected
-    loaded_model_knn = pickle.load(open(filename, 'rb'))
-
-    daily_features = ['humidity', 'min_temp', 'wind_speed', 'cloudiness']
-
-    # Get the last row in the dataframe to be usd as the features
-    tomorrow_data = X.head(1)
-    print(X.tail(1))
-
-    predicted_gotten = []
-
-    for i in range(1, 12):
-        tomorrow_data = temp_forecast[i:i+1]
-
-        predict_daily = float(loaded_model_knn.predict(tomorrow_data[daily_features]))
-
-        dateThis = tomorrow_data.index.strftime("%Y-%m-%d")
-
-        print(tomorrow_data.index)
-
-        print(dateThis)
-
-        predicted_gotten.append([dateThis, predict_daily])
-
-    # Convert results
-    json_str = dumps(predicted_gotten, default=json_util.default)
-
-    # Load it as an object
-    record2 = loads(json_str)
-
-    # Return it as json
-    response = jsonify(data=record2)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
-
 
 # Used to get the forecasting information from the database by area name, area type, and the model that was used (lstm, prophet)
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
@@ -308,6 +198,117 @@ def index3():
 
     # Load it as an object
     record2 = loads(mt)
+
+    # Return it as json
+    response = jsonify(data=record2)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
+# This is an example of what can be done using flask and combining it with machine learning for COVID-19 and weather data
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+@app.route('/apic/getmodel')
+def index12():
+    print('okay')
+    areaName = request.args.get('areaname', default = '*', type = str)
+
+    temp = pd.read_csv('history_data_england_temperature.csv')
+    temp_forecast = pd.read_csv('forecast_data_england.csv')
+
+    filename = 'knn-model-united-kingdom-daily.pkl'
+
+    if areaName == 'England':
+        temp = pd.read_csv('history_data_england_temperature.csv')
+        filename = 'knn-model-england-daily.pkl'
+
+    if areaName == 'Scotland':
+        filename = 'knn-model-scotland-daily.pkl'
+
+    if areaName == 'Northern Ireland':
+        filename = 'knn-model-northern-ireland-daily.pkl'
+
+    if areaName == 'Wales':
+        filename = 'knn-model-wales-daily.pkl'
+
+    temp = temp.iloc[:].reset_index().drop('index', axis=1)
+    temp_forecast = temp_forecast.iloc[:].reset_index().drop('index', axis=1)
+
+
+    # Convert to datetime
+    temp['date'] = pd.to_datetime(temp['Date time'])
+    temp_forecast['date'] = pd.to_datetime(temp_forecast['Date time'])
+
+    columns = ['Maximum Temperature', 'Minimum Temperature', 'Temperature',
+    'Wind Chill', 'Precipitation', 'Wind Speed', 'Wind Gust',
+    'Cloud Cover', 'Relative Humidity', 'Conditions', 'date']
+    temp = temp[columns]
+    temp_forecast = temp_forecast[columns]
+
+    df = temp
+
+    # Normalise column names
+    df.rename(columns={'Maximum Temperature':'max_temp', 'Minimum Temperature':'min_temp',
+    'Temperature':'avg_temp', 'Wind Chill':'wind_chill',
+    'Precipitation':'precipitation', 'Wind Speed':'wind_speed',
+    'Wind Gust':'wind_gust', 'Cloud Cover':'cloudiness',
+    'Relative Humidity':'humidity', 'Conditions':'conditions'}, inplace=True)
+
+    # Normalize column names
+    temp_forecast.rename(columns={'Maximum Temperature':'max_temp', 'Minimum Temperature':'min_temp',
+    'Temperature':'avg_temp', 'Wind Chill':'wind_chill',
+    'Precipitation':'precipitation', 'Wind Speed':'wind_speed',
+    'Wind Gust':'wind_gust', 'Cloud Cover':'cloudiness',
+    'Relative Humidity':'humidity', 'Conditions':'conditions'}, inplace=True)
+
+    # Set date as index
+    df = df.set_index('date')
+    temp_forecast = temp_forecast.set_index('date')
+
+    # Organize columns and drop conditions
+    df = df[['avg_temp', 'min_temp',
+    'max_temp', 'humidity', 'cloudiness',
+    'precipitation', 'wind_speed', 'wind_chill',
+    'wind_gust']]
+
+    # Organize columns and drop conditions
+    temp_forecast = temp_forecast[['avg_temp', 'min_temp',
+    'max_temp', 'humidity', 'cloudiness',
+    'precipitation', 'wind_speed', 'wind_chill',
+    'wind_gust']]
+
+    df.dropna(axis=1, inplace=True)
+
+    X = df
+
+    # Load the model based on the area (such as England, Scotland, etc) selected
+    loaded_model_knn = pickle.load(open(filename, 'rb'))
+
+    daily_features = ['humidity', 'min_temp', 'wind_speed', 'cloudiness']
+
+    # Get the last row in the dataframe to be usd as the features
+    tomorrow_data = X.head(1)
+    print(X.tail(1))
+
+    predicted_gotten = []
+
+    for i in range(1, 12):
+        tomorrow_data = temp_forecast[i:i+1]
+
+        predict_daily = float(loaded_model_knn.predict(tomorrow_data[daily_features]))
+
+        dateThis = tomorrow_data.index.strftime("%Y-%m-%d")
+
+        print(tomorrow_data.index)
+
+        print(dateThis)
+
+        predicted_gotten.append([dateThis, predict_daily])
+
+    # Convert results
+    json_str = dumps(predicted_gotten, default=json_util.default)
+
+    # Load it as an object
+    record2 = loads(json_str)
 
     # Return it as json
     response = jsonify(data=record2)
