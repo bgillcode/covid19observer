@@ -11,19 +11,17 @@ import Typography from "@material-ui/core/Typography";
 import './App.css';
 import { Grid } from "@material-ui/core";
 
+// This is used to display the details about the area such as population size, etc
+// It also passes the information to the chart file to display charts
 export default class Overview extends Component {
 
   constructor(props) {
     super(props)
 
-
     this.state = {
       language: '',
     }
-
   }
-
-
 
   populateDetails() {
     console.log(this);
@@ -43,7 +41,6 @@ export default class Overview extends Component {
       if (this.props.areaDetailsForOverview[0].data['Female']) {
         populationFemale = this.props.areaDetailsForOverview[0].data['Female']
       }
-      // console.log(gottenThis);
     }
     return (
 
@@ -74,9 +71,6 @@ export default class Overview extends Component {
 
     )
   }
-
-
-
 
   render() {
     return (
