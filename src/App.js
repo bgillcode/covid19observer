@@ -490,7 +490,7 @@ class App extends Component {
     }
 
     // Gets the details of the area from the API and saves it into areaDetailsForOverview
-    baseURL = 'http://localhost:5000/'
+    var baseURL = 'http://localhost:5000/'
     var getURL = baseURL + 'apic/getdetailsofarea?areanamegiven=' + this.state.areaName.trim();
     fetch(getURL).then(res => res.json()).then(data => {
       var qcget = data
@@ -503,6 +503,7 @@ class App extends Component {
           this.setState({
             areaDetailsForOverview: mss,
           })
+          console.log(mss);
         } else {
           console.log("area not available yet");
         }
@@ -617,109 +618,348 @@ class App extends Component {
     // Used to render things on the page
     render() {
 
-      // Used for the filtering of places in the left side of page in the textbox
       let filteredSearchPlaces = this.state.dataForSearch.concat(this.state.dataForSearchRegion).concat(this.state.dataForSearchUTLA).filter(
         (place) => {
           return place.toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1;
         }
       );
 
-      // Gets the position on the map that has been selected
+      function handleLangChange(e) {
+        var lang = e.target.value;
+        // console.log('done');
+      }
+
       const position = [this.state.lat, this.state.lng]
 
+
+
       return (
+
         <Grid container direction="column">
           <Grid item>
             <Header />
           </Grid>
           <Grid item container>
-            {/* Grid system of Material-UI used to show the website in different forms of layout for different resolutions, such as for desktop or mobile, etc */}
             <Grid item xs={3} sm={3} md={2}>
               <div>
                 <div id="last-updated-on">
                   <p>
+                    {/*Last updated on: {this.getDate()}*/}
                   </p>
-                </div>
-
-                {/* Displaying the textbox used for filtering, and all of the places such as United Kingdom, England, Scotland, Wales, Northern Ireland, and the regions, etc in text form on the left */}
+                  </div>
                 {this.displayTextBox()}
                 <Paper style={{maxHeight: 600, overflow: 'auto'}}>
-                  {filteredSearchPlaces.map((place, i)=> {
-                    if (place == 'United Kingdom') {
-                      return <li style={{cursor: 'pointer'}} onClick={this.clickedPlace.bind(this)} key={i}> {place} </li>;
-                      }
-                      return <li style={{cursor: 'pointer'}} onClick={this.clickedPlace.bind(this)} key={i}> {place} </li>;
-                      })}
-                    </Paper>
-                  </div>
+                {filteredSearchPlaces.map((place, i)=> {
+                  if (place == 'United Kingdom') {
+                    return <li style={{cursor: 'pointer'}} onClick={this.clickedPlace.bind(this)} key={i}> {place} </li>;
+                  }
+                  return <li style={{cursor: 'pointer'}} onClick={this.clickedPlace.bind(this)} key={i}> {place} </li>;
+                  })}
+                  </Paper>
+                </div>
 
-                </Grid>
-                <Grid item xs={9} sm={3} md={4}>
-                  <div>
-                    <div id='currently-selected-label-above-map'>
-                      <p>Currently displaying on the map: {this.state.areaName}
-                      </p>
-                    </div>
-                    {/* Dropdown box */}
-                    <FormControl>
-                      <InputLabel htmlFor="age-native-simple">Currently Displaying on the map:</InputLabel>
-                      <Select
-                        native
-                        onChange={this.handleChange.bind(this)}
-                        value={this.state.chosenFromDropdown}
-                        inputProps={{
-                          name: 'age',
-                          id: 'age-native-simple',
-                        }}
-                        >
-                        <option value={10}>Cumulative Daily Cases</option>
-                        <option value={20}>Cumulative Patients in Mechanical Ventilation Beds</option>
-                        <option value={30}>Cumulative Testing</option>
-                      </Select>
-                    </FormControl>
-                  </div>
 
-                  {/* Check and display what type of GeoJSON boundary is being displayed on the map (nation, region, etc), display the text for this on the page to inform the user */}
 
-                  Display: {this.checkBoundaryDisplayType()}
 
-                  {/* Map */}
-                  <Maps className="markercluster-map" center={[this.state.latOfArea, this.state.lonOfArea]} zoom={this.state.valueOfZoom} maxZoom={18} ref={this.myMapRef}>
-                    <TileLayer
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                      />
-
-                    {/* Used to check if the schools data points should be shown on the map, if it's true then it will loop through an array and show them */}
-                    {this.state.showSchoolsOnMap == true ?
-                      {/* Clustering is done here for the marker points (markers) to group them */}
-                      <MarkerClusterGroup iconCreateFunction={this.createClusterCustomIcon2}>
-                        {this.renderMarkers()}
-                      </MarkerClusterGroup> :
-
-                      {/* Used to check if the schools data points should be shown on the map, if it's true then it will loop through an array and show them */}
-                      {this.getGeoJSONAppear()}
-                    </Maps>
-
-                    {/* Clickable text with a pointer icon, if the schools text have been clicked then it will use the checkIfSchoolsTextHasBeenSelected function to see if the variable for seeing schools is set to true */}
-
-                    <div>
-                      <span onClick={this.clickedSchoolSelectionText.bind(this)} style={{cursor: 'pointer'}} id="schoolSelectionText">{this.checkIfSchoolsTextHasBeenSelected()}</span>
-                    </div>
-
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6}>
-
-                    {/* Pass the data to the tabs component so that it can render things, it passes the area name that's been selected, areatype, other details such as the population details, etc */}
-                    <SimpleTabs handleAreaName={this.handleAreaName} areaName={this.state.areaName} areaType={this.state.areaType} areaDetailsForOverview={this.state.areaDetailsForOverview} dataGottenBackFromAPI={this.state.dataGottenBackFromAPI} />
-                  </Grid>
-
-                </Grid>
-                <Footer></Footer>
               </Grid>
+              {/* Map */}
+              <Grid item xs={9} sm={3} md={4}>
 
-            );
-          }
+
+                <div>
+                  <div id='currently-selected-label-above-map'>
+                    <p>Currently displaying on the map: {this.state.areaName}
+                      </p>
+                  </div>
+                  <FormControl>
+                    <InputLabel htmlFor="age-native-simple">Currently Displaying on the map:</InputLabel>
+                    <Select
+                      native
+                      onChange={this.handleChange.bind(this)}
+                      value={this.state.chosenFromDropdown}
+                      inputProps={{
+                        name: 'age',
+                        id: 'age-native-simple',
+                      }}
+                      >
+                      <option value={10}>Cumulative Daily Cases</option>
+                      <option value={20}>Cumulative Patients in Mechanical Ventilation Beds</option>
+                      <option value={30}>Cumulative Testing</option>
+                    </Select>
+                  </FormControl>
+                </div>
+
+
+
+
+
+
+                {/* <MappedClassOf areaName={this.state.areaName} onSelectLanguage={this.handleLanguage} dataGottenBackFromAPI={this.state.dataGottenBackFromAPI} /> */}
+
+                Display: {this.checkBoundaryDisplayType()}
+
+                <Maps className="markercluster-map" center={[this.state.latOfArea, this.state.lonOfArea]} zoom={this.state.valueOfZoom} maxZoom={18} ref={this.myMapRef}>
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    />
+
+
+
+
+
+
+
+
+
+                  {this.state.showSchoolsOnMap == true ?
+                  <MarkerClusterGroup iconCreateFunction={this.createClusterCustomIcon2}>
+                    {this.renderMarkers()}
+                  </MarkerClusterGroup> :
+
+                  <Marker position={[55.2970314, -1.72889996]} number={35284}>
+                    <Popup
+                      minWidth={200}
+                      closeButton={false}
+                      onClose={popup => console.warn('popup-close', popup)}
+                      >
+                      <div>
+                        <b>Location: North East</b>
+                        <p>Count: {35284}</p>
+                      </div>
+                    </Popup>
+                  </Marker>
+                }
+
+
+
+
+
+
+                  {/* Put <MarkerClusterGroup {...props} /> inside react-leaflet after <TileLayer /> */}
+
+                  {/*<MarkerClusterGroup>
+
+                    <Marker position={[54.3023545, -3.2765753]} />
+                    <Marker position={[54.3013545, -3.2764753]} />
+
+                    <Marker position={[51.7023545, -3.8765753]}>
+                    <Popup
+                    minWidth={200}
+                    closeButton={false}
+                    onClose={popup => console.warn('popup-close', popup)}
+                    >
+                    <div>
+                    <b>Hello world!</b>
+                    <p>stuff</p>
+                    </div>
+                    </Popup>
+
+                    </Marker>
+
+                    </MarkerClusterGroup>
+                    */}
+
+
+
+
+
+
+
+                    <MarkerClusterGroup iconCreateFunction={this.createClusterCustomIcon}>
+
+                      <Marker position={[55.2970314, -1.72889996]} number={35284}>
+                        <Popup
+                          minWidth={200}
+                          closeButton={false}
+                          onClose={popup => console.warn('popup-close', popup)}
+                          >
+                          <div>
+                            <b>Location: North East</b>
+                            <p>Count: {35284}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+
+
+
+                      <Marker position={[54.44945145, -2.7723701]} number={45684}>
+                        <Popup
+                          minWidth={200}
+                          closeButton={false}
+                          onClose={popup => console.warn('popup-close', popup)}
+                          >
+                          <div>
+                            <b>Location: North West</b>
+                            <p>Count: {45684}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+
+
+
+                      <Marker position={[51.4509697, -0.99311]} number={35284}>
+                        <Popup
+                          minWidth={200}
+                          closeButton={false}
+                          onClose={popup => console.warn('popup-close', popup)}
+                          >
+                          <div>
+                            <b>Location: South East</b>
+                            <p>Count: {35284}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+
+
+                      <Marker position={[52.79571915, -0.84966999]} number={23252}>
+                        <Popup
+                          minWidth={200}
+                          closeButton={false}
+                          onClose={popup => console.warn('popup-close', popup)}
+                          >
+                          <div>
+                            <b>Location: East Midlands</b>
+                            <p>Count: {23252}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+
+
+                      <Marker position={[59.3023545, -3.2765753]} number={31728}>
+                        <Popup
+                          minWidth={200}
+                          closeButton={false}
+                          onClose={popup => console.warn('popup-close', popup)}
+                          >
+                          <div>
+                            <b>Location: Yorkshire and The Humber</b>
+                            <p>Count: {31728}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+
+
+                      <Marker position={[52.55696869, -2.2035799]} number={26920}>
+                        <Popup
+                          minWidth={200}
+                          closeButton={false}
+                          onClose={popup => console.warn('popup-close', popup)}
+                          >
+                          <div>
+                            <b>Location: West Midlands</b>
+                            <p>Count: {26920}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+
+
+                      <Marker position={[55.2970314, -1.72889996]} number={15314}>
+                        <Popup
+                          minWidth={200}
+                          closeButton={false}
+                          onClose={popup => console.warn('popup-close', popup)}
+                          >
+                          <div>
+                            <b>Location: North East</b>
+                            <p>Count: {15314}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+
+
+                      <Marker position={[52.24066925, 0.50414598]} number={24641}>
+                        <Popup
+                          minWidth={200}
+                          closeButton={false}
+                          onClose={popup => console.warn('popup-close', popup)}
+                          >
+                          <div>
+                            <b>Location: East of England</b>
+                            <p>Count: {4}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+
+
+                      <Marker position={[50.81119156, -3.63343]} number={13193}>
+                        <Popup
+                          minWidth={200}
+                          closeButton={false}
+                          onClose={popup => console.warn('popup-close', popup)}
+                          >
+                          <div>
+                            <b>Location: South West</b>
+                            <p>Count: {13193}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+
+
+
+
+                    </MarkerClusterGroup>
+
+                    <Marker position={[55.2970314, -1.72889996]} number={35284}>
+                      <Popup
+                        minWidth={200}
+                        closeButton={false}
+                        onClose={popup => console.warn('popup-close', popup)}
+                        >
+                        <div>
+                          <b>Location: North East</b>
+                          <p>Count: {35284}</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+
+
+
+
+
+                    <Marker position={[55.2970314, -1.72889996]} number={35284}>
+                      <Popup
+                        minWidth={200}
+                        closeButton={false}
+                        onClose={popup => console.warn('popup-close', popup)}
+                        >
+                        <div>
+                          <b>Location: North East</b>
+                          <p>Count: {35284}</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+
+
+                    {/* // <GeoJSON data={this.getGeoJSONNew()} style={this.getStyle(1, 2)} /> */}
+
+                    {this.getGeoJSONAppear()}
+
+
+
+
+
+
+                  </Maps>
+
+                  <div>
+                    <span onClick={this.clickedSchoolSelectionText.bind(this)} style={{cursor: 'pointer'}} id="schoolSelectionText">{this.checkIfSchoolsTextHasBeenSelected()}</span>
+                  </div>
+
+
+
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+
+                  <SimpleTabs handleAreaName={this.handleAreaName} areaName={this.state.areaName} areaType={this.state.areaType} areaDetailsForOverview={this.state.areaDetailsForOverview} dataGottenBackFromAPI={this.state.dataGottenBackFromAPI} />
+                </Grid>
+
+              </Grid>
+              <Footer></Footer>
+            </Grid>
+
+          );
+        }
         }
 
         export default App;

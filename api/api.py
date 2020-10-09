@@ -402,52 +402,69 @@ def index88():
 
     print("queryCreated: ")
     print(queryCreated)
+    # Get the pymongo query response
+    json_str = dumps(queryCreated, default=json_util.default)
 
-    @cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
-    @app.route('/apic/gettrafficdata')
-    def index88():
-        dateGiven = request.args.get('dategiven', default='*', type=str)
+    # Remove the NaN values and change them to null values to have a valid json response
+    mt = json_str.replace('NaN', 'null')
 
-        print(dateGiven)
+    # Load it as an object
+    record2 = loads(mt)
 
-        # Check if date given in the parameter route is valid first
-        start = ""
-        if dateGiven != '*':
-            try:
-                start = datetime.strptime(dateGiven, '%Y-%m-%d')
-            except ValueError:
-                return 'Invalid date'
+    print("teasfsdf")
+    print(record2)
 
-        # Can switch databases from here
-        dbss = mongo.cx['placedata']
+    # Return it as json
+    response = jsonify(data=record2)
+    print(response)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
-        print(dbss)
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
+@app.route('/apic/gettrafficdata')
+def index92():
+    dateGiven = request.args.get('dategiven', default='*', type=str)
 
-        # This variable controls how many maximum results are returned from queries
-        limitAmount = 100
+    print(dateGiven)
 
-        areaNameOfOverview = "United Kingdom"
-
-        collectionNameUsed = ''
-
-        # Switch to see if area type has been selected from a predefined list
-        areaTypeinlist = 0
-
-        # Used to store the documents that are returned
-        docs = []
-
-        queryCreated = {}
-
+    # Check if date given in the parameter route is valid first
+    start = ""
+    if dateGiven != '*':
         try:
-            # print(areaNameGiven.toLowerCase())
-            queryCreated = dbss["trafficdata"].find({}, {'_id': False})
+            start = datetime.strptime(dateGiven, '%Y-%m-%d')
+        except ValueError:
+            return 'Invalid date'
+
+    # Can switch databases from here
+    dbss = mongo.cx['placedata']
+
+    print(dbss)
+
+    # This variable controls how many maximum results are returned from queries
+    limitAmount = 100
+
+    areaNameOfOverview = "United Kingdom"
+
+    collectionNameUsed = ''
+
+    # Switch to see if area type has been selected from a predefined list
+    areaTypeinlist = 0
+
+    # Used to store the documents that are returned
+    docs = []
+
+    queryCreated = {}
+
+    try:
+        # print(areaNameGiven.toLowerCase())
+        queryCreated = dbss["trafficdata"].find({}, {'_id': False})
 
 
-        except:
-            print("Nothing")
+    except:
+        print("Nothing")
 
-        print("queryCreated: ")
-        print(queryCreated)
+    print("queryCreated: ")
+    print(queryCreated)
 
 
     queryCreated = dbss[collectionNameUsed].find({ "date" : start, "areaName" : re.compile(areaNameGiven, re.IGNORECASE) }, { '_id' : False }).limit(limitAmount)
