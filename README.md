@@ -10,7 +10,7 @@ Database used: MongoDB
 
 ## Report
 
-For my report the code as a whole can be used, the JavaScript code is in the 'src'/ directory.
+The JavaScript code is in the 'src'/ directory.
 
 The scripts used in cron to automate the application are in the 'Scripts used (for report)'/ directory.
 Machine learning code is included in the Jupyter Notebooks titled 'Cases for Project - Forecasting (For report)' and 'Cases for Project - Regression (For report)', this has been provided for reference on how the models were built and tested and include the error scores for this proof of concept prototype application.
