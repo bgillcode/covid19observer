@@ -15,9 +15,7 @@ The JavaScript code is in the 'src'/ directory.
 The scripts used in cron to automate the application are in the 'Scripts used (for report)'/ directory.
 Machine learning code is included in the Jupyter Notebooks titled 'Cases for Project - Forecasting (For report)' and 'Cases for Project - Regression (For report)', this has been provided for reference on how the models were built and tested and include the error scores for this proof of concept prototype application.
 
-A dump of the data is available for reference in the 'Database dump (For report)'/ directory), the forecasted data is available in the 'dump/placedata/forecasting_cases.bson' file. To restore the MongoDB database collections use mongorestore and point it to the database to restore.
-
-If any additional data or information needs to be explained please ask.
+A dump of the currently available data is available for reference in the 'Database dump (For report)'/ directory), the forecasted data is available in the 'dump/placedata/forecasting_cases.bson' file. To restore the MongoDB database collections use mongorestore and point it to the database to restore.
 
 
 ## How to install
