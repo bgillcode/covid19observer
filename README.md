@@ -17,7 +17,7 @@ Machine learning code is included in the Jupyter Notebooks titled 'Cases for Pro
 
 A dump of the data is available for reference in the 'Database dump (For report)'/ directory), the forecasted data is available in the 'dump/placedata/forecasting_cases.bson' file. To restore the MongoDB database collections use mongorestore and point it to the database to restore.
 
-If any additional data or information needs to be explained please let me know and I can go over it.
+If any additional data or information needs to be explained please ask.
 
 
 ## How to install
