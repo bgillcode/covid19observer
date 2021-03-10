@@ -1,5 +1,7 @@
 # COVID-19 Observer App
-Online web application prototype for tracking COVID-19 related data, along with forecasting and predictions.
+An automated online web application for tracking COVID-19 related data, along with forecasting and predictions using machine learning.
+Data is processed on the backend and stored in a database.
+Information is displayed in a frontend using graphs and maps that are able to be clicked on by users.
 
 Backend: Flask
 
